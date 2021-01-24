@@ -1,13 +1,14 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#)version 0.09
-#@(#)	History
-#@(#) 	v0.07	07jan2021 : first version with revision info
-#@(#) 	v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
-#@(#) 	v0.09	09jan2021 : corrected video finder
-#@(#) 	v0.09	09jan2021 : max_muxing_queue_size 9999
-#@(#) 	v0.09	11jan2021 : fileoutfull for rm suggestion
-#@(#) 	v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
+#@(#) version 0.11
+#@(#)   History
+#@(#)   v0.07	07jan2021 : first version with revision info
+#@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
+#@(#)   v0.09	09jan2021 : corrected video finder
+#@(#)   v0.09	09jan2021 : max_muxing_queue_size 9999
+#@(#)   v0.09	11jan2021 : fileoutfull for rm suggestion
+#@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
+#@(#)   v0.11   24jan2021 : additional encoders
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home 
 # also by default removable-media is not connected to snap
@@ -289,10 +290,10 @@ then
                             ;;
                         vp9)
                             decoder="vp9_cuvid"
-					        #found decoder stop reading video_lines
-					        break
+                            #found decoder stop reading video_lines
+                            break
                             ;;
-				        *)
+						*)
 					        decoder="uNKowN"
                     esac
 			done
@@ -305,18 +306,18 @@ then
 			echo " map : ${map_options}"
 			# k is used because of old code with simple read 
 			case $k in
-                               	4)
-                                       	encoder="-c:V h264_nvenc -preset:V hq -profile:V high -rc-lookahead 20"
-					tagenc="nvidia264"
-                                       	;;
-                               	5)
-                                       	encoder="-c:V hevc_nvenc -preset:V hq -profile:V main10 -rc-lookahead 20"
-					tagenc="nvidia265"
-                                       	;;
-                               	*)
-                                       	printf "Do not have a target encoder is not possible here ABORT"
-					exit 161
-                       	esac
+                    4)
+                        encoder="-c:V h264_nvenc -preset:V hq -profile:V high -rc-lookahead 20"
+                        tagenc="nvidia264"
+                        ;;
+                    5)
+                        encoder="-c:V hevc_nvenc -preset:V hq -profile:V main10 -rc-lookahead 20"
+                        tagenc="nvidia265"
+                        ;;
+                     *)
+                        printf "Do not have a target encoder is not possible here ABORT"
+                        exit 161
+            esac
 			encoded_by="ffmpeg_nvidia_hardware"
 			mkvtitle="" # Removing tag title is often bogus
                        	echo "using encoder ${encoder}"
