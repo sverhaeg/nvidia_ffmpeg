@@ -256,24 +256,45 @@ then
                	     		width=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\2/" `
               	        	echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video" 
 		        	case ${vtype} in
-                               	h264)
-                                	decoder="h264_cuvid"
-					#found decoder stop reading video_lines
-					break 
-                                	;;
-                               	hevc)
-                                  	decoder="hevc_cuvid"
-					#found decoder stop reading video_lines
-					break
-                                       	;;
-                               	mpeg4)
-                                  	decoder="mpeg4_cuvid"
-					#found decoder stop reading video_lines
-					break
-                                       	;;
-				*)
-					decoder="uNKowN"
-                       		esac
+		        		h264)
+                            decoder="h264_cuvid"
+					        #found decoder stop reading video_lines
+					        break 
+                            ;;
+                        hevc)
+                            decoder="hevc_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+                        mpeg4)
+                            decoder="mpeg4_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+                        mpeg2)
+                            decoder="mpeg2_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+                        vc1)
+                            decoder="vc1_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+
+                        vp8)
+                            decoder="vp8_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+                        vp9)
+                            decoder="vp9_cuvid"
+					        #found decoder stop reading video_lines
+					        break
+                            ;;
+				        *)
+					        decoder="uNKowN"
+                    esac
 			done
        			unset IFS
 			echo "VIDEO is ${vstream} ${vtype} ${height} ${width} $decoder"
