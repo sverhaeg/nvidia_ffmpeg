@@ -241,61 +241,60 @@ then
 			echo "testing whoencoded is not ffmpeg_nvidia_hardware ${whoencoded}"
 			#echo "${video_lines}" >> "details/\"${fileout}\".video"
 			#echo "${video_lines}" 
-       			IFS=$'\n'
+            IFS=$'\n'
 			# used for debug lines
-       			occ=0
+            occ=0
 			decoder="uNKowN"
-       			for line in ${video_lines}
-               		do
-				((++occ))
+            for line in ${video_lines}
+            do
+                ((++occ))
 				#echo "${ooc} ${video_lines}" >> "details/\"${fileout}\".video"
 				echo "checking stream ${occ}"
-               	  		part1=`echo "${line}" | cut -f1 -d','`
+                part1=`echo "${line}" | cut -f1 -d','`
 				vtype=`echo "${part1}" | sed "s/.*Video:[[:space:]]\([a-zA-Z0-9]*\)[[:space:]].*/\1/"`
 				vstream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
-              	  		height=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\1/" `
-               	     		width=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\2/" `
-              	        	echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video" 
-		        	case ${vtype} in
-		        		h264)
-                            decoder="h264_cuvid"
-					        #found decoder stop reading video_lines
-					        break 
-                            ;;
-                        hevc)
-                            decoder="hevc_cuvid"
-					        #found decoder stop reading video_lines
-					        break
-                            ;;
-                        mpeg4)
-                            decoder="mpeg4_cuvid"
-					        #found decoder stop reading video_lines
-					        break
-                            ;;
-                        mpeg2)
-                            decoder="mpeg2_cuvid"
-					        #found decoder stop reading video_lines
-					        break
-                            ;;
-                        vc1)
-                            decoder="vc1_cuvid"
-					        #found decoder stop reading video_lines
-					        break
-                            ;;
-
-                        vp8)
-                            decoder="vp8_cuvid"
-					        #found decoder stop reading video_lines
-					        break
-                            ;;
-                        vp9)
-                            decoder="vp9_cuvid"
-                            #found decoder stop reading video_lines
-                            break
-                            ;;
-						*)
-					        decoder="uNKowN"
-                    esac
+                height=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\1/" `
+                width=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\2/" `
+                echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video"
+                case ${vtype} in
+                    h264)
+                    decoder="h264_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    hevc)
+                        decoder="hevc_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    mpeg4)
+                        decoder="mpeg4_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    mpeg2)
+                        decoder="mpeg2_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    vc1)
+                        decoder="vc1_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    vp8)
+                        decoder="vp8_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    vp9)
+                        decoder="vp9_cuvid"
+                        #found decoder stop reading video_lines
+                        break
+                        ;;
+                    *)
+                        decoder="uNKowN"
+                esac
 			done
        			unset IFS
 			echo "VIDEO is ${vstream} ${vtype} ${height} ${width} $decoder"
