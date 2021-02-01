@@ -25,23 +25,23 @@ cat << EOF
 Usage: ./nvidia_ffmpeg.sh -d <directory> -e <encoder>
 Encode all known video files using nvidia cuvid hardware for decoding and encoding
 
--h, -help,          --help                  Display help
+-h,-?, -help,          --help                  Display help
 
--f, -file,          --file                  Limit search to file partern (and use dirname for dir)
+-f,    -file,          --file                  Limit search to file partern (and use dirname for dir)
 
--d, -dir,           --dir                   Directory to scan and encode
+-d,    -dir,           --dir                   Directory to scan and encode
 
--e, -encoder,       --encoder               Enocoder 4 or 5
+-e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
 
--F, -Force,         --Force                 Force encoding ignore .skip and encoded_by checks
+-F,    -Force,         --Force                 Force encoding ignore .skip and encoded_by checks
 
--V, -Verbose,       --Verbose               Verbose with set -xv
+-V,    -Verbose,       --Verbose               Verbose with set -xv
 
--a, -audiomap,      --audiomap              Overwrite default audio mapping ["-map 0:a"] -- all audio
+-a,    -audiomap,      --audiomap              Overwrite default audio mapping ["-map 0:a"] -- all audio
 
--s, -submap,        --submap                Overwrite default subtitle mapping ["-map 0:s:m:language:dut? -map 0:s:m:language:eng? -map 0:s:m:language:fra?"] -- subtitles 3 languanges
+-s,    -submap,        --submap                Overwrite default subtitle mapping ["-map 0:s:m:language:dut? -map 0:s:m:language:eng? -map 0:s:m:language:fra?"] -- subtitles 3 languanges
 
--o, -optionaudio,   --optionaudio           Overwrite audio and sub otpions ["-c:s copy -c:a ac3 -b:a 640k"] -- copy subs and audio in ac3 640k bitrate
+-o,    -optionaudio,   --optionaudio           Overwrite audio and sub otpions ["-c:s copy -c:a ac3 -b:a 640k"] -- copy subs and audio in ac3 640k bitrate
 EOF
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
@@ -62,7 +62,7 @@ eval set -- "$options"
 while true
 do
 case $1 in
--h|--help)
+-h|-?|--help)
     showHelp
     exit 0
     ;;
