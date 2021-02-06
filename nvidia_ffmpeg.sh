@@ -9,6 +9,7 @@
 #@(#)   v0.09	11jan2021 : fileoutfull for rm suggestion
 #@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
 #@(#)   v0.11   24jan2021 : additional encoders
+#@(#)   v0.12   06feb2021 : IFS correction for files
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -194,6 +195,7 @@ then
     else
         allfiles=`find "work_${mypid}/" -maxdepth 1 -mindepth 1 -name "${optfile}" -print `
     fi
+    IFS=$'\n'
     for afile in ${allfiles}
     do
         echo "file $afile"
@@ -239,7 +241,7 @@ then
             echo "testing whoencoded is not ffmpeg_nvidia_hardware ${whoencoded}"
             #echo "${video_lines}" >> "details/\"${fileout}\".video"
             #echo "${video_lines}"
-            IFS=$'\n'
+            #IFS=$'\n'
             # used for debug lines
             occ=0
             decoder="uNKowN"
@@ -294,7 +296,7 @@ then
                         decoder="uNKowN"
                 esac
             done
-                unset IFS
+            #    unset IFS
             echo "VIDEO is ${vstream} ${vtype} ${height} ${width} $decoder"
             #echo "VIDEO is ${vstream} ${vtype} ${height} ${width} $decoder" >> "details/\"${fileout}\".video"
             #eval ${cmdcheckaudio}
@@ -388,6 +390,7 @@ then
             echo "Error: file ${input} not found"
         fi
     done
+    unset IFS
 else
     echo "Provide exiting dir or include in filename"
 fi
