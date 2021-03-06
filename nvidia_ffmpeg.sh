@@ -10,7 +10,7 @@
 #@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
 #@(#)   v0.11   24jan2021 : additional encoders
 #@(#)   v0.12   06feb2021 : IFS correction for files
-#@(#)   v0.13   06mar2021 : .skip logic with input instead of fileout + correct options -? broken all
+#@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broken all
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -213,9 +213,9 @@ then
                 rm "work_${mypid}/.runningffmpegconvert"
                 exit
             fi
-            if [[ -f work_${mypid}/.skipffmpegconvert_${input} ]] && [[ -z ${Force} ]]
+            if [[ -f work_${mypid}/.skipffmpegconvert_${fileoutfull} ]] && [[ -z ${Force} ]]
                         then
-                                echo "skip of file requested by work_${mypid}/.skipffmpegconvert_${input} "
+                                echo "skip of file requested by work_${mypid}/.skipffmpegconvert_${fileoutfull} "
                                 #next file
                                 continue
                         fi
@@ -350,7 +350,7 @@ then
                     if [[ -z ${Force} ]]
                     then
                         echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
-                        echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert_${input}"
+                        echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert_${fileoutfull}"
                         rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                         #Try next movie file, this will try all files ones in this (series) directory and skip next time
                         continue
@@ -381,7 +381,7 @@ then
             else
                 echo "Error ffmpeg result ${cresult}"
                 echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
-                echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert_${input}"
+                echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert_${fileoutfull}"
                 echo "Reason ffmpeg error '${inputdir}' ${cresult}" >> conversion_failed
                 rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                 #Try next movie file, this will try all files ones in this (series) directory and skip next time
