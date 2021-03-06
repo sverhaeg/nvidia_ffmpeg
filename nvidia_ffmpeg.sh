@@ -10,7 +10,7 @@
 #@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
 #@(#)   v0.11   24jan2021 : additional encoders
 #@(#)   v0.12   06feb2021 : IFS correction for files
-#@(#)   v0.13   06mar2021 : .skip logic with input instead of fileout
+#@(#)   v0.13   06mar2021 : .skip logic with input instead of fileout + correct options -? broken all
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -27,9 +27,9 @@ cat << EOF
 Usage: ./nvidia_ffmpeg.sh -d <directory> -e <encoder>
 Encode all known video files using nvidia cuvid hardware for decoding and encoding
 
--h,-?, -help,          --help                  Display help
+-h,    -help,          --help                  Display help
 
--f,    -file,          --file                  Limit search to file partern (and use dirname for dir)
+-f,   -file,          --file                  Limit search to file partern (and use dirname for dir)
 
 -d,    -dir,           --dir                   Directory to scan and encode
 
@@ -54,7 +54,7 @@ EOF
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,Force,encoder,audiomap,submap,optionaudio," -o "hf:d:VFe:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,Force,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VFe:a:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -64,51 +64,51 @@ eval set -- "$options"
 while true
 do
 case $1 in
--h|-?|--help)
-    showHelp
-    exit 0
-    ;;
--f|--file)
-    shift
-    export optfile=`basename $1`
-    if [[ -z ${optdir} ]]
-    then
-        export optdir=`dirname $1`
-    fi
-    ;;
--d|--dir)
-    shift
-    export optdir=$1
-    ;;
--F|--Force)
-    export Force=1
-    ;;
--V|--verbose)
-    export Verbose=1
-    set -xv  # Set xtrace and verbose mode.
-    ;;
--e|--encoder)
-    shift
-    export optenc=$1
-    ;;
--a|--audiomap)
-    shift
-    export optaud=$1
-    ;;
--s|--submap)
-    shift
-    export optsub=$1
-    ;;
--o|--optionaudio)
-    shift
-    export optopta=$1
-    ;;
---)
-    shift
-    break;;
-*)
-    shift
-    break;;
+    -h|--help)
+        showHelp
+        exit 0
+        ;;
+    -f|--file)
+        shift
+        export optfile=`basename $1`
+        if [[ -z ${optdir} ]]
+        then
+            export optdir=`dirname $1`
+        fi
+        ;;
+    -d|--dir)
+        shift
+        export optdir=$1
+        ;;
+    -F|--Force)
+        export Force=1
+        ;;
+    -V|--verbose)
+        export Verbose=1
+        set -xv  # Set xtrace and verbose mode.
+        ;;
+    -e|--encoder)
+        shift
+        export optenc=$1
+        ;;
+    -a|--audiomap)
+        shift
+        export optaud=$1
+        ;;
+    -s|--submap)
+        shift
+        export optsub=$1
+        ;;
+    -o|--optionaudio)
+        shift
+        export optopta=$1
+        ;;
+    --)
+        shift
+        break;;
+    *)
+        shift
+        break;;
 esac
 shift
 done
