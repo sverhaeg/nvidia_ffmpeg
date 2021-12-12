@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.13
+#@(#) version 0.14
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -11,6 +11,7 @@
 #@(#)   v0.11   24jan2021 : additional encoders
 #@(#)   v0.12   06feb2021 : IFS correction for files
 #@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
+#@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -213,9 +214,9 @@ then
                 rm "work_${mypid}/.runningffmpegconvert"
                 exit
             fi
-            if [[ -f work_${mypid}/.skipffmpegconvert_${fileoutfull} ]] && [[ -z ${Force} ]]
+            if [[ -f work_${mypid}/${fileoutfull}.skipffmpegconvert ]] && [[ -z ${Force} ]]
                         then
-                                echo "skip of file requested by work_${mypid}/.skipffmpegconvert_${fileoutfull} "
+                                echo "skip of file requested by work_${mypid}/${fileoutfull}.skipffmpegconvert "
                                 #next file
                                 continue
                         fi
@@ -350,7 +351,7 @@ then
                     if [[ -z ${Force} ]]
                     then
                         echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
-                        echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert_${fileoutfull}"
+                        echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                         rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                         #Try next movie file, this will try all files ones in this (series) directory and skip next time
                         continue
