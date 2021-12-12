@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.14
+#@(#) version 0.15
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -12,6 +12,7 @@
 #@(#)   v0.12   06feb2021 : IFS correction for files
 #@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
+#@(#)   v0.15   12dec2021 : .skip correction when error
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -382,7 +383,7 @@ then
             else
                 echo "Error ffmpeg result ${cresult}"
                 echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
-                echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert_${fileoutfull}"
+                echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                 echo "Reason ffmpeg error '${inputdir}' ${cresult}" >> conversion_failed
                 rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                 #Try next movie file, this will try all files ones in this (series) directory and skip next time
