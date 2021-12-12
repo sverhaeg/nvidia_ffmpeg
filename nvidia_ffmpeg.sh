@@ -10,7 +10,7 @@
 #@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
 #@(#)   v0.11   24jan2021 : additional encoders
 #@(#)   v0.12   06feb2021 : IFS correction for files
-#@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broken all
+#@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
