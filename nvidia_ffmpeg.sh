@@ -11,7 +11,7 @@
 #@(#)   v0.11   24jan2021 : additional encoders
 #@(#)   v0.12   06feb2021 : IFS correction for files
 #@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
-#@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin
+#@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
