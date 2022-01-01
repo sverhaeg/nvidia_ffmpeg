@@ -13,7 +13,7 @@
 #@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 #@(#)   v0.15   12dec2021 : .skip correction when error
-#@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [to not write .ffmpegconvert_done or .skipffmpegconvert skip for file is still done]
+#@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
 #@(#)   v0.17   01jan2022 : print audiolines of original
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
@@ -41,7 +41,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -F,    -Force,         --Force                 Force encoding ignore .skip and encoded_by checks
 
--S,    -Serie,         --Serie                 Do not mark directory .ffmpegconvert_done or .skipffmpegconvert however will not ignore these
+-S,    -Serie,         --Serie                 Do not mark directory .skipffmpegconvert however will not ignore these
 
 -V,    -Verbose,       --Verbose               Verbose with set -xv
 
@@ -243,12 +243,10 @@ then
             then
                 echo "HOLD IT this file was already encoded not doing this again found ${whoencoded} in ${afile} or use -Force"
                 now=$(date)
-                if [[ -z ${Forceserie} ]]
-                then
-                                echo "on ${now} already_done [ Force = ${Force} ]  ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
-                fi
+                echo "on ${now} already_done [ Force = ${Force} ]  ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
                 if [[ -z ${Force} ]]
                 then
+                    #next file force not set
                     continue
                 fi
             fi
@@ -396,10 +394,8 @@ then
                 mvcmd=`echo "mv \"${input}\" \"${input}_converted_${tagenc}\""`
                 echo "rm '${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
                 now=$(date)
-                if [[ -z ${Forceserie} ]]
-                then
-                    echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
-                fi
+                echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
+                echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
             else
@@ -425,11 +421,7 @@ fi
 # cleanup
 rm "work_${mypid}/.runningffmpegconvert"
 now=$(date)
-if [[ -z ${Forceserie} ]]
-then
-    echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
-    echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
-fi
+echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
 echo "Script ran with ${options} on $(date)"
 echo " Audio was ${audio_lines}"
 rm work_${mypid}
