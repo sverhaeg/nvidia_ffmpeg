@@ -49,8 +49,8 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 	echo "===================${now}===================" >> ${mylogfile}
 	echo ${sonarr_movie_path} >> ${mylogfile}
 	cd /media/APPS/torrents/sonarr_custom
-	#sleep 1000
-	log=`./nvidia_ffmpeg.sh -d "${sonarr_episodefile_path}" -e 5 2>&1` 
+	#use Serie option for sonarr otherwise only first episode will be converted
+	log=`./nvidia_ffmpeg.sh -S -d "${sonarr_episodefile_path}" -e 5 2>&1`
 	chmod -R ug+rw ${sonarr_episodefile_path}
 	chown -R boss:adults ${sonarr_episodefile_path}
 	echo ${log} >> ${mylogfile}
