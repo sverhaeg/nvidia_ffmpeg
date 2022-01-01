@@ -425,6 +425,6 @@ rm "work_${mypid}/.runningffmpegconvert"
 now=$(date)
 if [[ -z ${Forceserie} ]]
 then
-    echo "Script ran with 1-$1 and 2-$2  on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
+    echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
 fi
 rm work_${mypid}
