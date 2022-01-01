@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.16
+#@(#) version 0.17
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -14,6 +14,7 @@
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 #@(#)   v0.15   12dec2021 : .skip correction when error
 #@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [to not write .ffmpegconvert_done or .skipffmpegconvert skip for file is still done]
+#@(#)   v0.17   01jan2022 : print audiolines of original
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
