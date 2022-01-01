@@ -342,7 +342,7 @@ then
             echo "using empty title for now ${mkvtitle}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
-            command_recode=`echo "ffmpeg -nostdin -v error -stats -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=${mkvtitle} -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin -v error -stats -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=${mkvtitle} -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
