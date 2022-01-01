@@ -13,7 +13,7 @@
 #@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 #@(#)   v0.15   12dec2021 : .skip correction when error
-#@(#)   v0.16   31dec2021 : added mpeg2video format
+#@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [to not write .ffmpegconvert_done or .skipffmpegconvert skip for file is still done]
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -39,6 +39,8 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
 
 -F,    -Force,         --Force                 Force encoding ignore .skip and encoded_by checks
+
+-S,    -Serie,         --Serie                 Do not mark directory .ffmpegconvert_done or .skipffmpegconvert however will not ignore these
 
 -V,    -Verbose,       --Verbose               Verbose with set -xv
 
@@ -85,6 +87,9 @@ case $1 in
         ;;
     -F|--Force)
         export Force=1
+        ;;
+    -S|--Serie)
+        export Forceserie=1
         ;;
     -V|--verbose)
         export Verbose=1
@@ -236,7 +241,10 @@ then
             then
                 echo "HOLD IT this file was already encoded not doing this again found ${whoencoded} in ${afile} or use -Force"
                 now=$(date)
+                if [[ -z ${Forceserie} ]]
+                then
                                 echo "on ${now} already_done [ Force = ${Force} ]  ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
+                fi
                 if [[ -z ${Force} ]]
                 then
                     continue
@@ -357,7 +365,10 @@ then
                         echo "nope new file bigger [[ Force = ${Force} ]] ${input} "
                     if [[ -z ${Force} ]]
                     then
-                        echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
+                        if [[ -z ${Forceserie} ]]
+                        then
+                            echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
+                        fi
                         echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                         rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                         #Try next movie file, this will try all files ones in this (series) directory and skip next time
@@ -383,12 +394,18 @@ then
                 mvcmd=`echo "mv \"${input}\" \"${input}_converted_${tagenc}\""`
                 echo "rm '${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
                 now=$(date)
-                echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
-                                echo "will do : ${mvcmd}"
-                                eval ${mvcmd}
+                if [[ -z ${Forceserie} ]]
+                then
+                    echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
+                fi
+                echo "will do : ${mvcmd}"
+                eval ${mvcmd}
             else
                 echo "Error ffmpeg result ${cresult}"
-                echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
+                if [[ -z ${Forceserie} ]]
+                then
+                    echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
+                fi
                 echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                 echo "Reason ffmpeg error '${inputdir}' ${cresult}" >> conversion_failed
                 rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
@@ -406,5 +423,8 @@ fi
 # cleanup
 rm "work_${mypid}/.runningffmpegconvert"
 now=$(date)
-echo "Script ran with 1-$1 and 2-$2  on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
+if [[ -z ${Forceserie} ]]
+then
+    echo "Script ran with 1-$1 and 2-$2  on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
+fi
 rm work_${mypid}
