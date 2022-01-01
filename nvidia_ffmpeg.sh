@@ -427,8 +427,8 @@ now=$(date)
 if [[ -z ${Forceserie} ]]
 then
     echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
-    echo " Audio was \n ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
+    echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
 fi
 echo "Script ran with ${options} on $(date)"
-echo " Audio was \n ${audio_lines}"
+echo " Audio was ${audio_lines}"
 rm work_${mypid}
