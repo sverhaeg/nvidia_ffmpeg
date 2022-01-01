@@ -17,12 +17,18 @@ usrgrp="boss:adults"
 plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
 	now=$(date)
 	echo "===================${now}===================" >> ${mylogfile}
-    set | grep -e radarr >> ${mylogfile
-    if [[ radarr_eventtype -eq "Test" ]]
+    set | grep -e radarr >> ${mylogfile}
+    if [[ -z ${radarr_eventtype} ]]
     then
-        echo "Test event ... can't do anything"
+        echo "No radarr event type ... can't do anything"
         exit
     fi
+    if [[ ${radarr_eventtype} == "Test" ]]
+    then
+        echo "Test event ... can't do anything" >> ${mylogfile}
+        exit
+    fi
+    echo "event type is ${radarr_eventtype} "
 	until [[ -f ${radarr_moviefile_sourcepath} ]]
 	do
 	echo "====waiting on ${radarr_moviefile_sourcepath} ===" >> ${mylogfile}
