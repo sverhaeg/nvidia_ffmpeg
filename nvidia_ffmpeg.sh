@@ -429,4 +429,6 @@ then
     echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
     echo " Audio was \n ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
 fi
+echo "Script ran with ${options} on $(date)"
+echo " Audio was \n ${audio_lines}"
 rm work_${mypid}
