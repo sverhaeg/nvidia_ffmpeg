@@ -262,6 +262,7 @@ then
             do
                 ((++audiostream))
                 echo "${audiostream} : ${line}"
+                ##
             done
             ###stop to debug audio###
             exit
@@ -277,7 +278,7 @@ then
                 vstream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
                 height=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\1/" `
                 width=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\2/" `
-                echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video"
+                #echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video"
                 case ${vtype} in
                     h264)
                     decoder="h264_cuvid"
