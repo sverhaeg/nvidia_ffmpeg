@@ -311,10 +311,10 @@ then
                 for i in ${!bestaudioscore[@]};
                 do
                     #echo " ${abestscore} compared ${bestaudioscore[$i]} "
-                    if [[ ${abestscore} -lt ${bestaudioscore[$i]} ]]
+                    if [[ ${abestscore} -lt ${bestaudioscore[${i}]} ]]
                         then
-                            echo "$i ${bestaudiosstream[$i]} ${bestaudioscore[${i}]}"
-                            abestscore=${bestaudioscore[$i]}
+                            echo "$i ${bestaudiosstream[${i}]} ${bestaudioscore[${i}]}"
+                            abestscore=${bestaudioscore[${i}]}
                             amapaudio="-map ${bestaudiosstream[${i}]}"
                     fi
                 done
