@@ -271,6 +271,7 @@ then
                 echo "${audiostream} : ${astream} ${alan} ${acod} ${achan}"
                 ##
                 #first is taken if no other criteria is met
+                audioscore=0
                 ((++audioscore))
                 #Prefered languages
                 case ${alan} in
