@@ -261,7 +261,7 @@ then
             for line in ${audio_lines}
             do
                 ((++audiostream))
-                
+                echo "${audiostream} : ${line}"
             done
             ###stop to debug audio###
             exit
