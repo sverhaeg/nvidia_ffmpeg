@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.17
+#@(#) version 0.20
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -14,7 +14,8 @@
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 #@(#)   v0.15   12dec2021 : .skip correction when error
 #@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
-#@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output 
+#@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
+#@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -144,7 +145,9 @@ else
 fi
 if [[ -z ${optaud} ]]
 then
-    map_options_audio="-map 0:a" #all audio
+    #map_options_audio="-map 0:a" #all audio
+    # for now all but will look for best if map_options_audio is not set
+    amapaudio="-map 0:a"
 else
     map_options_audio=${optaud}
 fi
@@ -255,7 +258,6 @@ then
             #echo "${video_lines}"
             #IFS=$'\n'
             # used for debug lines
-            amapaudio="-map 0:a"
             if [[ -z ${map_options_audio} ]]
             then
                 echo "auto select best audio"
@@ -317,8 +319,8 @@ then
                     fi
                 done
                 echo "best mapped audio is ${amapaudio}"
+                map_options_audio=${amapaudio}
             fi
-            map_options_audio=${amapaudio}
             echo "will look for video encoder"
             occ=0
             decoder="uNKowN"
