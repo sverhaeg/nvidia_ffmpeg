@@ -255,71 +255,73 @@ then
             #echo "${video_lines}"
             #IFS=$'\n'
             # used for debug lines
+            amapaudio="-map 0:a"
+            if [[ -z ${map_options_audio} ]]
+            then
+                echo "auto select best audio"
+                for line in ${audio_lines}
+                do
+                    ((++audiostream))
+                    echo "${audiostream} : ${line}"
+                    part1=`echo "${line}" | cut -f1 -d','`
+                    astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
+                    alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
+                    acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
+                    part3=`echo "${line}" | cut -f3 -d','`
+                    achan=`echo "${part3}" | sed "s/[[:space:]]\([0-9]*.[0-9]*\).*/\1/"`
+                    ##
+                    #first is taken if no other criteria is met
+                    audioscore=0
+                    ((++audioscore))
+                    #Prefered languages
+                    case ${alan} in
+                            eng)
+                                audioscore=$(( ${audioscore} + 10 ))
+                            ;;
+                    esac
+                    # prefer ac3 over dts
+                    case ${acod} in
+                            ac3)
+                                audioscore=$(( ${audioscore} + 3 ))
+                            ;;
+                            dts)
+                                audioscore=$(( ${audioscore} + 2 ))
+                            ;;
+                    esac
+                    # prefer 5.1 over 7.1 only look at
+                    case ${achan} in
+                            5.1)
+                                audioscore=$(( ${audioscore} + 7 ))
+                            ;;
+                            7.1)
+                            audioscore=$(( ${audioscore} + 6 ))
+                            ;;
+                            8.1)
+                                audioscore=$(( ${audioscore} + 5 ))
+                            ;;
+                    esac
+                    bestaudioscore[${audiostream}]=${audioscore}
+                    bestaudiosstream[${audiostream}]=${astream}
+                    echo "${audiostream} : ${astream} ${alan} ${acod} ${achan} score ${audioscore}"
+                done
+                ## look for best score
+                abestscore=$(( 0 + 0 ))
+                for i in ${!bestaudioscore[@]};
+                do
+                    #echo " ${abestscore} compared ${bestaudioscore[$i]} "
+                    if [[ ${abestscore} -lt ${bestaudioscore[$i]} ]]
+                        then
+                            echo "$i ${bestaudiosstream[$i]} ${bestaudioscore[${i}]}"
+                            abestscore=${bestaudioscore[$i]}
+                            amapaudio="-map ${bestaudiosstream[${i}]}:a"
+                    fi
+                done
+                echo "best mapped audio is ${amapaudio}"
+            fi
+            map_options_audio=${amapaudio}
+            echo "will look for video encoder"
             occ=0
             decoder="uNKowN"
-            echo "auto select best audio"
-            for line in ${audio_lines}
-            do
-                ((++audiostream))
-                echo "${audiostream} : ${line}"
-                part1=`echo "${line}" | cut -f1 -d','`
-                astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
-                alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
-                acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
-                part3=`echo "${line}" | cut -f3 -d','`
-                achan=`echo "${part3}" | sed "s/[[:space:]]\([0-9]*.[0-9]*\).*/\1/"`
-                echo "${audiostream} : ${astream} ${alan} ${acod} ${achan}"
-                ##
-                #first is taken if no other criteria is met
-                audioscore=0
-                ((++audioscore))
-                #Prefered languages
-                case ${alan} in
-                        eng)
-                            audioscore=$(( ${audioscore} + 10 ))
-                        ;;
-                esac
-                # prefer ac3 over dts
-                case ${acod} in
-                        ac3)
-                            audioscore=$(( ${audioscore} + 3 ))
-                        ;;
-                        dts)
-                            audioscore=$(( ${audioscore} + 2 ))
-                        ;;
-                esac
-                # prefer 5.1 over 7.1 only look at
-                case ${achan} in
-                        5.1)
-                            audioscore=$(( ${audioscore} + 7 ))
-                        ;;
-                        7.1)
-                            audioscore=$(( ${audioscore} + 6 ))
-                        ;;
-                        8.1)
-                            audioscore=$(( ${audioscore} + 5 ))
-                        ;;
-                esac
-                bestaudioscore[${audiostream}]=${audioscore}
-                bestaudiosstream[${audiostream}]=${astream}
-            done
-            ## look for best score
-            abestscore=$(( 0 + 0 ))
-            for i in ${!bestaudioscore[@]};
-            do
-                echo " ${abestscore} compared ${bestaudioscore[$i]} "
-                if [[ ${abestscore} -lt ${bestaudioscore[$i]} ]]
-                    then
-                        echo "$i ${bestaudiosstream[$i]} ${bestaudioscore[${i}]}"
-                        abestscore=${bestaudioscore[$i]}
-                        amapaudio="-map a:${bestaudiosstream[${i}]}"
-                fi
-            done
-            echo "best mapped audio is ${amapaudio}"
-            ###stop to debug audio###
-            exit
-            #######
-            echo "will look for video encoder"
             for line in ${video_lines}
             do
                 ((++occ))
