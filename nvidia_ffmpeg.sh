@@ -257,6 +257,16 @@ then
             # used for debug lines
             occ=0
             decoder="uNKowN"
+            echo "auto select best audio"
+            for line in${audio_lines}
+            do
+                ((++audiostream))
+                
+            done
+            ###stop to debug audio###
+            exit
+            #######
+            echo "will look for video encoder"
             for line in ${video_lines}
             do
                 ((++occ))
