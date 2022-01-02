@@ -267,7 +267,6 @@ then
                     echo "${audiostream} : ${line}"
                     part1=`echo "${line}" | cut -f1 -d','`
                     astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
-                    astream=`echo "${astream}" | sed "s/:/:a:/"`
                     alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                     acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                     part3=`echo "${line}" | cut -f3 -d','`
@@ -464,6 +463,7 @@ then
                 now=$(date)
                 echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
+                echo " Audio selected ${map_options_audio}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
             else
