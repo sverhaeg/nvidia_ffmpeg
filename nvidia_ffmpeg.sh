@@ -14,7 +14,7 @@
 #@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
 #@(#)   v0.15   12dec2021 : .skip correction when error
 #@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
-#@(#)   v0.17   01jan2022 : print audiolines of original
+#@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output 
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
