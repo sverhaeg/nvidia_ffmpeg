@@ -267,7 +267,8 @@ then
                 alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                 acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                 part3=`echo "${line}" | cut -f3 -d','`
-                echo "${audiostream} : ${astream} ${alan} ${acod} ${part3}"
+                achan=`echo "${part3}" | sed "s/(...).*/\1/`
+                echo "${audiostream} : ${astream} ${alan} ${acod} ${achan}"
                 ##
                 #first is taken if no other criteria is met
                 ((++audioscore))
@@ -298,6 +299,8 @@ then
                             audioscore=$(( ${audioscore} + 5 ))
                         ;;
                 esac
+                bestaudioscore[${audiostream}]=${audioscore}
+                bestaudiosstream[${audiostream}]=${astream}
             done
             ## look for best score
             abestscore=$(( 0 + 0 ))
