@@ -269,7 +269,49 @@ then
                 part3=`echo "${line}" | cut -f3 -d','`
                 echo "${audiostream} : ${astream} ${alan} ${acod} ${part3}"
                 ##
+                #first is taken if no other criteria is met
+                ((++audioscore))
+                #Prefered languages
+                case ${alan} in
+                        eng)
+                            audioscore=$(( ${audioscore} + 10 ))
+                        ;;
+                esac
+                # prefer ac3 over dts
+                case ${acod} in
+                        ac3)
+                            audioscore=$(( ${audioscore} + 3 ))
+                        ;;
+                        dts)
+                            audioscore=$(( ${audioscore} + 2 ))
+                        ;;
+                esac
+                # prefer 5.1 over 7.1
+                case ${achan} in
+                        5.1)
+                            audioscore=$(( ${audioscore} + 7 ))
+                        ;;
+                        7.1)
+                            audioscore=$(( ${audioscore} + 6 ))
+                        ;;
+                        8.1)
+                            audioscore=$(( ${audioscore} + 5 ))
+                        ;;
+                esac
             done
+            ## look for best score
+            abestscore=$(( 0 + 0 ))
+            for i in ${!bestaudioscore[@]};
+            do
+                echo " ${abestscore} compared ${bestaudioscore[$i]} "
+                if [[ ${abestscore} -lt ${bestaudioscore[$i]} ]]
+                    then
+                        echo "$i ${bestaudiosstream[$i]} ${bestaudioscore[${i}]}"
+                        abestscore=${bestaudioscore[$i]}
+                        amapaudio="-map a:${bestaudiosstream[${i}]}"
+                fi
+            done
+            echo "best mapped audio is ${amapaudio}"
             ###stop to debug audio###
             exit
             #######
