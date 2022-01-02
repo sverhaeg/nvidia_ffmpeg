@@ -262,6 +262,12 @@ then
             do
                 ((++audiostream))
                 echo "${audiostream} : ${line}"
+                part1=`echo "${line}" | cut -f1 -d','`
+                astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
+                alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
+                acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
+                part3=`echo "${line}" | cut -f3 -d','`
+                echo "${audiostream} : ${astream} ${alan} ${acod} ${part3}"
                 ##
             done
             ###stop to debug audio###
