@@ -267,6 +267,7 @@ then
                     echo "${audiostream} : ${line}"
                     part1=`echo "${line}" | cut -f1 -d','`
                     astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
+                    astream=`echo "${astream}" | sed "s/:/:a:/"`
                     alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                     acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                     part3=`echo "${line}" | cut -f3 -d','`
@@ -315,7 +316,7 @@ then
                         then
                             echo "$i ${bestaudiosstream[$i]} ${bestaudioscore[${i}]}"
                             abestscore=${bestaudioscore[$i]}
-                            amapaudio="-map ${bestaudiosstream[${i}]}:a"
+                            amapaudio="-map ${bestaudiosstream[${i}]}"
                     fi
                 done
                 echo "best mapped audio is ${amapaudio}"
