@@ -267,7 +267,7 @@ then
                 alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                 acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                 part3=`echo "${line}" | cut -f3 -d','`
-                achan=`echo "${part3}" | sed "s/(...).*/\1/`
+                achan=`echo "${part3}" | sed "s/(...).*/\1/"`
                 echo "${audiostream} : ${astream} ${alan} ${acod} ${achan}"
                 ##
                 #first is taken if no other criteria is met
