@@ -258,7 +258,7 @@ then
             occ=0
             decoder="uNKowN"
             echo "auto select best audio"
-            for line in${audio_lines}
+            for line in ${audio_lines}
             do
                 ((++audiostream))
                 
