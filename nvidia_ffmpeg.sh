@@ -267,7 +267,7 @@ then
                 alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                 acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                 part3=`echo "${line}" | cut -f3 -d','`
-                achan=`echo "${part3}" | sed "s/(...).*/\1/"`
+                achan=`echo "${part3}" | sed "s/[[:space:]]\([0-9]*.[0-9]*\).*/\1/"`
                 echo "${audiostream} : ${astream} ${alan} ${acod} ${achan}"
                 ##
                 #first is taken if no other criteria is met
@@ -288,7 +288,7 @@ then
                             audioscore=$(( ${audioscore} + 2 ))
                         ;;
                 esac
-                # prefer 5.1 over 7.1
+                # prefer 5.1 over 7.1 only look at
                 case ${achan} in
                         5.1)
                             audioscore=$(( ${audioscore} + 7 ))
