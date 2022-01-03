@@ -20,7 +20,7 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 	now=$(date)
 	echo "===================${now}==================" >> ${mylogfile}
 	set | grep -e sonarr >> ${mylogfile}
-     if [[ -z ${sodarr_eventtype} ]]
+     if [[ -z ${sonarr_eventtype} ]]
     then
         echo "No sonarr event type ... can't do anything" >> ${mylogfile}
         exit
