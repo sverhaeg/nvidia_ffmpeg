@@ -1,7 +1,7 @@
 #!/bin/bash
-
-# Examples for testing
-#
+# Script is basic and does not contain logic for eventypes
+### !!! script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
+### !!! script needs to owned by radarr user or is nor run
 # In Radarr, Settings -> Connect add a Custom Script
 # On Grab: No
 # On Download: Yes
@@ -9,12 +9,13 @@
 # On Rename: No
 # Details on variables
 # https://wiki.servarr.com/Radarr_Tips_and_Tricks#Custom_Post_Processing_Scripts
+#######################     Changes here      #######################
 mydir="/media/APPS/torrents/radarr_custom"
-##### script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
 mylogfile="${mydir}/my.log"
 usrgrp="boss:adults"
 # section 2 is movie refresh use external ip iso 172
 plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
+#####################################################################
 	now=$(date)
 	echo "===================${now}===================" >> ${mylogfile}
     set | grep -e radarr >> ${mylogfile}

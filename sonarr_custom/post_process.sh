@@ -1,7 +1,7 @@
 #!/bin/bash
-
-# Examples for testing
-#
+# Script is basic and does not contain logic for eventypes little testing done so far based on radarr post script
+### !!! script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
+### !!! script needs to owned by sonarr user or is nor run
 # In Sonarr, Settings -> Connect add a Custom Script
 # On Grab: No
 # On Download: Yes
@@ -9,12 +9,14 @@
 # On Rename: No
 # Details on variables
 # https://wiki.servarr.com/sonarr/custom-scripts
+#######################     Changes here      #######################
 mydir="/media/APPS/torrents/sonarr_custom"
 ##### script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
 mylogfile="${mydir}/my.log"
 usrgrp="boss:adults"
 # section 3 is movie shows refresh
 plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
+#####################################################################
 	now=$(date)
 	echo "===================${now}==================" >> ${mylogfile}
 	set | grep -e sonarr >> ${mylogfile}
