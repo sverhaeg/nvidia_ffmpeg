@@ -25,6 +25,8 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
         echo "No sonarr event type ... can't do anything" >> ${mylogfile}
         exit
     fi
+    echo "not able to complete if series folder is not known"
+    exit
 	if [[ sonarr_eventtype == "Test" ]]
 	then
 		echo "Test event ... can't do anything" 
