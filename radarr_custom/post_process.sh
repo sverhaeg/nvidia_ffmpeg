@@ -30,9 +30,10 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
         exit
     fi
     echo "event type is ${radarr_eventtype} "
-	until [[ -f ${radarr_moviefile_sourcepath} ]]
+    echo "radarr_moviefile_path is ${radarr_moviefile_path}"
+	until [[ -f ${radarr_moviefile_path} ]]
 	do
-	echo "====waiting on ${radarr_moviefile_sourcepath} ===" >> ${mylogfile}
+	echo "====waiting on ${radarr_moviefile_path} ===" >> ${mylogfile}
 	sleep 60
 	done
 	filesizea=2
@@ -42,11 +43,10 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
 		echo "checking size ${filesizea} vs ${filesizeb}" >> ${mylogfile}
 		filesizeb=${filesizea}
 		sleep 60
-		filesizea=$(stat -c%s "${radarr_moviefile_sourcepath}")
+		filesizea=$(stat -c%s "${radarr_moviefile_path}")
 	done
 
 	echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
-
 	echo "===================${now}===================" >> ${mylogfile}
 	set | grep -e radarr >> ${mylogfile}
 	echo "${radarr_movie_path}" >> ${mylogfile}
