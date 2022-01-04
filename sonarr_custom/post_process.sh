@@ -8,6 +8,7 @@
 # On Upgrade: Yes
 # On Rename: No
 # Details on variables
+# using dirname sonarr_episodefile_path sonarr_episodefile_path
 # https://wiki.servarr.com/sonarr/custom-scripts
 #######################     Changes here      #######################
 mydir="/media/APPS/torrents/sonarr_custom"
@@ -31,6 +32,8 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 		exit
 	fi
     echo "event type is ${sonarr_eventtype} "
+    sonarr_serie_path=$(dirname "${sonarr_episodefile_path}")
+    echo "sonarr_serie_path is ${sonarr_serie_path}"
 	until [[ -f ${sonarr_episodefile_sourcepath} ]]
 	do
 	echo "====waiting on ${sonarr_episodefile_sourcepath} ===" >> ${mylogfile}
@@ -50,14 +53,14 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 
 	echo "===================${now}===================" >> ${mylogfile}
 	echo ${sonarr_movie_path} >> ${mylogfile}
-	cd /media/APPS/torrents/sonarr_custom
-	#use Serie option for sonarr otherwise only first episode will be converted
-	log=`./nvidia_ffmpeg.sh -S -d "${sonarr_episodefile_path}" -e 5 2>&1`
-	chmod -R ug+rw ${sonarr_episodefile_path}
-	chown -R boss:adults ${sonarr_episodefile_path}
+	cd "${my_dir}"
+    chmod -R ug+rw "${sonarr_serie_path}"
+    chown -R ${usrgrp} "${sonarr_serie_path}"
+    #use Serie option for sonarr otherwise only first episode will be converted
+	log=`./nvidia_ffmpeg.sh -S -d "${sonarr_serie_path}" -e 5 2>&1`
+	chmod -R ug+rw "${sonarr_serie_path}"
+	chown -R ${usrgrp} "${sonarr_serie_path}"
 	echo ${log} >> ${mylogfile}
-	
 	# -k to ignore certificate
-	curl -k "https://192.168.5.150:32400/library/sections/3/refresh"
+	curl -k ${plexrefresh}
 	exit
-
