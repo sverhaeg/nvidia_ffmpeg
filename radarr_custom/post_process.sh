@@ -1,6 +1,6 @@
 #!/bin/bash
 # Script is basic and does not contain logic for eventypes
-### !!! script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
+### !!! script assumes symlink ln -s nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
 ### !!! script needs to owned by radarr user or is nor run
 # In Radarr, Settings -> Connect add a Custom Script
 # On Grab: No
@@ -9,7 +9,7 @@
 # On Rename: No
 # Details on variables
 # https://wiki.servarr.com/Radarr_Tips_and_Tricks#Custom_Post_Processing_Scripts
-#######################     Changes here      #######################
+#######################  DO   Changes here    #######################
 mydir="/media/APPS/torrents/radarr_custom"
 mylogfile="${mydir}/my.log"
 usrgrp="boss:adults"
