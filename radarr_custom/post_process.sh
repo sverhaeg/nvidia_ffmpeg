@@ -49,16 +49,17 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
 
 	echo "===================${now}===================" >> ${mylogfile}
 	set | grep -e radarr >> ${mylogfile}
-	echo ${radarr_movie_path} >> ${mylogfile}
-	cd ${mydir}
+	echo "${radarr_movie_path}" >> ${mylogfile}
+	cd $"{mydir}"
+    pwd
 	#sleep 1000
     chmod -R ug+rw "${radarr_movie_path}"
     chown -R ${usrgrp} "${radarr_movie_path}"
     #invoke nvidia convert
 	log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
-	chmod -R ug+rw "${radarr_movie_path}"
-	chown -R ${usrgrp} "${radarr_movie_path}"
 	echo ${log} >> ${mylogfile}
+    chmod -R ug+rw "${radarr_movie_path}"
+    chown -R ${usrgrp} "${radarr_movie_path}"
 	# -k to ignore certificate curl -k
 	curl -k ${plexrefresh}
 	exit
