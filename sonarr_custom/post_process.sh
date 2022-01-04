@@ -15,7 +15,7 @@ mydir="/media/APPS/torrents/sonarr_custom"
 ##### script assumes symlink off nvidia_ffmpeg.sh in mydir as this is used as working directory of nvidia_ffmpeg.sh
 mylogfile="${mydir}/my.log"
 usrgrp="boss:adults"
-# section 3 is movie shows refresh
+# section 3 is series section to refresh; using external ip iso 172
 plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 #####################################################################
 	now=$(date)
@@ -48,16 +48,14 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 		sleep 60
 		filesizea=$(stat -c%s "${sonarr_episodefile_sourcepath}")
 	done
-
 	echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
-
 	echo "===================${now}===================" >> ${mylogfile}
 	echo ${sonarr_movie_path} >> ${mylogfile}
 	cd "${my_dir}"
     chmod -R ug+rw "${sonarr_serie_path}"
     chown -R ${usrgrp} "${sonarr_serie_path}"
-    #use Serie option for sonarr otherwise only first episode will be converted
-	log=`./nvidia_ffmpeg.sh -S -d "${sonarr_serie_path}" -e 5 2>&1`
+    #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
+	log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
 	chmod -R ug+rw "${sonarr_serie_path}"
 	chown -R ${usrgrp} "${sonarr_serie_path}"
 	echo ${log} >> ${mylogfile}
