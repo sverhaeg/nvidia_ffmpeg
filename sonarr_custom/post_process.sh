@@ -13,7 +13,7 @@
 #######################  DO   Changes here    #######################
 mydir="/media/APPS/torrents/sonarr_custom"
 mylogfile="${mydir}/my.log"
-usrgrp="boss:adults"
+grp="adults"
 # section 3 is series section to refresh; using external ip iso 172
 plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 #####################################################################
@@ -54,14 +54,14 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     cd "${mydir}"
     pwd >> ${mylogfile}
     chmd=`chmod -R ug+rw "${sonarr_serie_path}" 2>&1`
-    cho=`chown -R ${usrgrp} "${sonarr_serie_path}" 2>&1`
+    chgp=`chgrp -R ${grp} "${sonarr_serie_path}" 2>&1`
     echo ${chmd} >> ${mylogfile}
-    echo ${cho} >> ${mylogfile}
+    echo ${chgp} >> ${mylogfile}
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
     log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     echo ${log} >> ${mylogfile}
     echo ${chmd} >> ${mylogfile}
-    echo ${cho} >> ${mylogfile}
+    echo ${chgp} >> ${mylogfile}
     # -k to ignore certificate
     curl -k ${plexrefresh}
     exit

@@ -12,7 +12,7 @@
 #######################  DO   Changes here    #######################
 mydir="/media/APPS/torrents/radarr_custom"
 mylogfile="${mydir}/my.log"
-usrgrp="boss:adults"
+grp="adults"
 # section 2 is movie refresh to refresh; using external ip iso 172
 plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
 #####################################################################
@@ -54,15 +54,14 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     pwd >> ${mylogfile}
     #sleep 1000
     chmd=`chmod -R ug+rw "${radarr_movie_path}" 2>&1`
-    cho=`chown -R ${usrgrp} "${radarr_movie_path}" 2>&1`
+    chgp=`chgrp -R ${grp} "${radarr_movie_path}" 2>&1`
     echo ${chmd} >> ${mylogfile}
-    echo ${cho} >> ${mylogfile}
-    chown -R ${usrgrp} "${radarr_movie_path}"
+    echo ${chgp} >> ${mylogfile}
     #invoke nvidia convert
     log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
     echo ${log} >> ${mylogfile}
     echo ${chmd} >> ${mylogfile}
-    echo ${cho} >> ${mylogfile}
+    echo ${chgp} >> ${mylogfile}
     # -k to ignore certificate curl -k
     curl -k ${plexrefresh}
     exit
