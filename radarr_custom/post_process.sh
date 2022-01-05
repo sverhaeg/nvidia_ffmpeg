@@ -16,8 +16,8 @@ usrgrp="boss:adults"
 # section 2 is movie refresh to refresh; using external ip iso 172
 plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
 #####################################################################
-	now=$(date)
-	echo "===================${now}===================" >> ${mylogfile}
+    now=$(date)
+    echo "===================${now}===================" >> ${mylogfile}
     set | grep -e radarr >> ${mylogfile}
     if [[ -z ${radarr_eventtype} ]]
     then
@@ -31,35 +31,35 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     fi
     echo "event type is ${radarr_eventtype} "
     echo "radarr_moviefile_path is ${radarr_moviefile_path}"
-	until [[ -f ${radarr_moviefile_path} ]]
-	do
-	echo "====waiting on ${radarr_moviefile_path} ===" >> ${mylogfile}
-	sleep 60
-	done
-	filesizea=2
-        filesizeb=1
-	until [[ ${filesizea} = ${filesizeb} ]]
-	do
-		echo "checking size ${filesizea} vs ${filesizeb}" >> ${mylogfile}
-		filesizeb=${filesizea}
-		sleep 60
-		filesizea=$(stat -c%s "${radarr_moviefile_path}")
-	done
-
-	echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
-	echo "===================${now}===================" >> ${mylogfile}
-	set | grep -e radarr >> ${mylogfile}
-	echo "${radarr_movie_path}" >> ${mylogfile}
-	cd "${mydir}"
+    until [[ -f ${radarr_moviefile_path} ]]
+    do
+        echo "====waiting on ${radarr_moviefile_path} ===" >> ${mylogfile}
+        sleep 60
+    done
+    filesizea=2
+    filesizeb=1
+    until [[ ${filesizea} = ${filesizeb} ]]
+    do
+        echo "checking size ${filesizea} vs ${filesizeb}" >> ${mylogfile}
+        filesizeb=${filesizea}
+        sleep 60
+        filesizea=$(stat -c%s "${radarr_moviefile_path}")
+    done
+    echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
+    echo "===================${now}===================" >> ${mylogfile}
+    set | grep -e radarr >> ${mylogfile}
+    echo "${radarr_movie_path}" >> ${mylogfile}
+    echo "going to use ${mydir}"
+    cd "${mydir}"
     pwd
-	#sleep 1000
+    #sleep 1000
     chmod -R ug+rw "${radarr_movie_path}"
     chown -R ${usrgrp} "${radarr_movie_path}"
     #invoke nvidia convert
-	log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
-	echo ${log} >> ${mylogfile}
+    log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
+    echo ${log} >> ${mylogfile}
     chmod -R ug+rw "${radarr_movie_path}"
     chown -R ${usrgrp} "${radarr_movie_path}"
-	# -k to ignore certificate curl -k
-	curl -k ${plexrefresh}
-	exit
+    # -k to ignore certificate curl -k
+    curl -k ${plexrefresh}
+    exit
