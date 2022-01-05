@@ -27,12 +27,12 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     fi
     if [[ sonarr_eventtype == "Test" ]]
     then
-        echo "Test event ... can't do anything"
+        echo "Test event ... can't do anything" >> ${mylogfile}
         exit
     fi
-    echo "event type is ${sonarr_eventtype} "
+    echo "event type is ${sonarr_eventtype} " >> ${mylogfile}
     sonarr_serie_path=$(dirname "${sonarr_episodefile_path}")
-    echo "sonarr_serie_path is ${sonarr_serie_path}"
+    echo "sonarr_serie_path is ${sonarr_serie_path}" >> ${mylogfile}
     until [[ -f ${sonarr_episodefile_path} ]]
 	do
         echo "====waiting on ${sonarr_episodefile_path} ===" >> ${mylogfile}
