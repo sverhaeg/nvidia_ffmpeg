@@ -50,15 +50,18 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
     echo "===================${now}===================" >> ${mylogfile}
     echo "${sonarr_movie_path}" >> ${mylogfile}
-    cd "${my_dir}"
-    pwd
-    chmod -R ug+rw "${sonarr_serie_path}"
-    chown -R ${usrgrp} "${sonarr_serie_path}"
+    echo "going to use ${mydir}" >> ${mylogfile}
+    cd "${mydir}"
+    pwd >> ${mylogfile}
+    chmd=`chmod -R ug+rw "${sonarr_serie_path}" 2>&1`
+    cho=`chown -R ${usrgrp} "${sonarr_serie_path}" 2>&1`
+    echo ${chmd} >> ${mylogfile}
+    echo ${cho} >> ${mylogfile}
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
     log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     echo ${log} >> ${mylogfile}
-    chmod -R ug+rw "${sonarr_serie_path}"
-    chown -R ${usrgrp} "${sonarr_serie_path}"
+    echo ${chmd} >> ${mylogfile}
+    echo ${cho} >> ${mylogfile}
     # -k to ignore certificate
     curl -k ${plexrefresh}
     exit
