@@ -31,19 +31,25 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     fi
     echo "event type is ${radarr_eventtype} " >> ${mylogfile}
     echo "radarr_moviefile_path is ${radarr_moviefile_path}" >> ${mylogfile}
+    # first time only sleep 5 firt time unless the file was not there otherwise 60
+    filesleep="5"
     until [[ -f ${radarr_moviefile_path} ]]
     do
         echo "====waiting on ${radarr_moviefile_path} ===" >> ${mylogfile}
         sleep 60
+        #no need to rush file is being copied
+        filesleep="60"
     done
-    filesizea=2
+    filesizea=$(stat -c%s "${radarr_moviefile_path}")
     filesizeb=1
     until [[ ${filesizea} = ${filesizeb} ]]
     do
         echo "checking size ${filesizea} vs ${filesizeb}" >> ${mylogfile}
         filesizeb=${filesizea}
-        sleep 60
+        sleep ${filesleep}
         filesizea=$(stat -c%s "${radarr_moviefile_path}")
+        # switch to 60 sleep as for now
+        filesleep="60"
     done
     echo "file not growing anymore ${filesizea} vs ${filesizeb}" >> ${mylogfile}
     echo "===================${now}===================" >> ${mylogfile}
