@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.20
+#@(#) version 0.23
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -16,6 +16,7 @@
 #@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
 #@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
+#@(#)   v0.23   07jan2022 : auto select audio for all series files (map first was used!)
 ##################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -150,6 +151,7 @@ then
     amapaudio="-map 0:a"
 else
     map_options_audio=${optaud}
+    audio_option_was_set=${optaud}
 fi
  
 if [[ -z ${optopta} ]]
@@ -258,7 +260,7 @@ then
             #echo "${video_lines}"
             #IFS=$'\n'
             # used for debug lines
-            if [[ -z ${map_options_audio} ]]
+            if [[ -z ${audio_option_was_set} ]]
             then
                 echo "auto select best audio"
                 for line in ${audio_lines}
