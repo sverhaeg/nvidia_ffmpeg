@@ -17,7 +17,7 @@
 #@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map first was used!)
-##################################
+################################################################################################################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
 #  to set
@@ -25,7 +25,7 @@
 #  to check
 #    sudo snap connections
 #
-
+################################################################################################################################
 
 showHelp() {
 # `cat << EOF` This means that cat should stop reading when EOF is detected
@@ -262,7 +262,7 @@ then
             # used for debug lines
             if [[ -z ${audio_option_was_set} ]]
             then
-                echo "auto select best audio"
+                echo "auto select best audio ################################audio################################"
                 for line in ${audio_lines}
                 do
                     ((++audiostream))
@@ -323,7 +323,7 @@ then
                 echo "best mapped audio is ${amapaudio}"
                 map_options_audio=${amapaudio}
             fi
-            echo "will look for video encoder"
+            echo "will look for video encoder ################################video################################"
             occ=0
             decoder="uNKowN"
             for line in ${video_lines}
@@ -422,6 +422,7 @@ then
                 sleep 600
             done
             echo " ok to start a new only running ${limit} jobs nvidia-smi type C"
+            echo "starting encoding ################################encode################################"
             eval ${command_recode}
             cresult=$?
             if [[ ${cresult} == 0 ]]
@@ -448,7 +449,7 @@ then
                 else
                         echo "size is fine"
                 fi
-                echo "post processing finding str"
+                echo "post processing finding str ################################post################################"
                 #find "work_${mypid}/" -maxdepth 2 -mindepth 1 -type f -and \( -name "*.srt" -or -name "*.nfo" -or -name "*.jpg" -or -name "*.smi" -or -name "*.idx" -or -name "*.sub" \) -and -not \( -name "*.nvidia264.*" -or -name "*.nvidia265.*" \) -print0 | while read -d $'\0' srtfile
                 find "work_${mypid}/" -maxdepth 2 -mindepth 1 -type f -name "${fileout}*" -and \( -name "*.srt" -or -name "*.nfo" -or -name "*.jpg" -or -name "*.smi" -or -name "*.idx" -or -name "*.sub" \) -and -not \( -name "*.AC3.nvidia264.*" -or -name "*.AC3.nvidia265.*" \) -print0 | while read -d $'\0' srtfile
                 do
@@ -493,5 +494,5 @@ rm "work_${mypid}/.runningffmpegconvert"
 now=$(date)
 echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
 echo "Script ran with ${options} on $(date)"
-echo " Audio was ${audio_lines}"
+echo " Last Audio was ${audio_lines}"
 rm work_${mypid}
