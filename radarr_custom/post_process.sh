@@ -59,8 +59,8 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     cd "${mydir}"
     pwd >> ${mylogfile}
     #sleep 1000
-    chmd=`chmod -R ug+rw "${radarr_movie_path}" 2>&1`
-    chgp=`chgrp -R ${grp} "${radarr_movie_path}" 2>&1`
+    chmd=`chmod -Rf ug+rw "${radarr_movie_path}" 2>&1`
+    chgp=`chgrp -Rf ${grp} "${radarr_movie_path}" 2>&1`
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
     #invoke nvidia convert

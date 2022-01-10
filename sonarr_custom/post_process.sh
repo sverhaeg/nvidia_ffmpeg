@@ -59,8 +59,8 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     echo "going to use ${mydir}" >> ${mylogfile}
     cd "${mydir}"
     pwd >> ${mylogfile}
-    chmd=`chmod -R ug+rw "${sonarr_serie_path}" 2>&1`
-    chgp=`chgrp -R ${grp} "${sonarr_serie_path}" 2>&1`
+    chmd=`chmod -Rf ug+rw "${sonarr_serie_path}" 2>&1`
+    chgp=`chgrp -Rf ${grp} "${sonarr_serie_path}" 2>&1`
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
