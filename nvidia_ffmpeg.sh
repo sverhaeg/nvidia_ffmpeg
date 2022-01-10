@@ -16,7 +16,7 @@
 #@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
 #@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
-#@(#)   v0.23   07jan2022 : auto select audio for all series files (map first was used!)
+#@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
 ################################################################################################################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
