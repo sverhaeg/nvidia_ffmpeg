@@ -109,7 +109,7 @@ case $1 in
     -t|--title)
         shift
         export opttitle=$1
-        echo " title ${opttitle} provided"
+        echo " title [${opttitle}] provided"
         ;;
     -e|--encoder)
         shift
