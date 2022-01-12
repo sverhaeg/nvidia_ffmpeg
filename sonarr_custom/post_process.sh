@@ -64,7 +64,9 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
-    log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
+    #log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
+    metatitle="${sonarr_series_title} : ${sonarr_episodefile_episodetitles}"
+    log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
     echo ${log} >> ${mylogfile}
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}

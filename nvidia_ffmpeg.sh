@@ -59,8 +59,6 @@ EOF
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
-#default option
-prog_options="-v error"
 #
 #
 # $@ is all command line parameters passed to the script.
@@ -68,7 +66,7 @@ prog_options="-v error"
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VpFSe:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie.title:,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -107,6 +105,10 @@ case $1 in
     -V|--Verbose)
         export Verbose=1
         set -xv  # Set xtrace and verbose mode.
+        ;;
+    -t|--title)
+        shift
+        export opttitle=$1
         ;;
     -e|--encoder)
         shift
@@ -147,6 +149,8 @@ then
     export optenc=$1
 fi
 #####
+#####
+#Default Options
 ###
 if [[ -z ${optsub} ]]
 then
@@ -169,6 +173,11 @@ then
     audio_subs_options="-c:s copy -c:a ac3 -b:a 640k" ## copy subs and covert audio to ac3 with 640k which is higest supported the default is 480k
 else
     audio_subs_options=${optopta}
+fi
+
+if [[ -z ${prog_options} ]]
+then
+    prog_options="-v error"
 fi
 
 ##echo "start"
@@ -415,13 +424,20 @@ then
             esac
             encoded_by="ffmpeg_nvidia_hardware"
             mkvtitle="" # Removing tag title is often bogus
-                        echo "using encoder ${encoder}"
-                        echo "using append  ${tagenc}"
             echo "using encoded_by ${encoded_by}"
-            echo "using empty title for now ${mkvtitle}"
+            if [[ -z ${opttitle} ]]
+            then
+                meta_title=${mkvtitle}
+                echo " no title set"
+            else
+                meta_title=${opttitle}
+            fi
+            echo "using encoder ${encoder}"
+            echo "using append  ${tagenc}"
+            echo "using meta title ${meta_title}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
-            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=${mkvtitle} -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
