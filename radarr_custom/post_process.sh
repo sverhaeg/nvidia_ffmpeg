@@ -67,6 +67,7 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     #log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
     ## with file iso directory
     log=`./nvidia_ffmpeg.sh -e 5 -f "${radarr_moviefile_path}" -t "${radarr_movie_title}" 2>&1`
+    echo "Starting nvidia_ffmpeg.sh"
     echo ${log} >> ${mylogfile}
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
