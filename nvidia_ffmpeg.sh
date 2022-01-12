@@ -66,7 +66,7 @@ EOF
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie.title:,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,title:,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
