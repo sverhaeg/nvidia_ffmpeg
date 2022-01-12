@@ -100,8 +100,7 @@ case $1 in
     -S|--Serie)
         export Forceserie=1
         ;;
-            
-    -p|-Progress)
+    -p|--Progress)
         export prog_options="-v error -stats"
         ;;
     -V|--verbose)
