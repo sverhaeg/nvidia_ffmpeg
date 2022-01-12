@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.23
+#@(#) version 0.24
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -17,6 +17,7 @@
 #@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
+#@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress
 ################################################################################################################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -45,6 +46,8 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -S,    -Serie,         --Serie                 Do not mark directory .skipffmpegconvert however will not ignore these
 
+-p,    -Progress       --Progress              Show progress stats ["-v error -stats"]
+
 -V,    -Verbose,       --Verbose               Verbose with set -xv
 
 -a,    -audiomap,      --audiomap              Overwrite default audio mapping ["-map 0:a"] -- all audio
@@ -56,13 +59,16 @@ EOF
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
-
+#default option
+prog_options="-v error"
+#
+#
 # $@ is all command line parameters passed to the script.
 # -o is for short options like -v
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,Force,Serie,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VFSe:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,Progress,Force,Serie,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VPFSe:a:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -93,6 +99,10 @@ case $1 in
         ;;
     -S|--Serie)
         export Forceserie=1
+        ;;
+            
+    -p|-Progress)
+        export prog_options="-v error -stats"
         ;;
     -V|--verbose)
         export Verbose=1
@@ -411,7 +421,7 @@ then
             echo "using empty title for now ${mkvtitle}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
-            command_recode=`echo "ffmpeg -nostdin -v error -stats -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=${mkvtitle} -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=${mkvtitle} -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
