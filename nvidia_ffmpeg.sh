@@ -17,7 +17,7 @@
 #@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
-#@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress
+#@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 ################################################################################################################################
 #if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -88,7 +88,6 @@ case $1 in
         then
             export optdir=$(dirname "$1")
             echo "Dir is ${optdir}"
-
         fi
         ;;
     -d|--dir)
