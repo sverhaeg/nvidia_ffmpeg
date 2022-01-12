@@ -68,7 +68,7 @@ prog_options="-v error"
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,Progress,Force,Serie,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VpFSe:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:VpFSe:a:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -100,10 +100,11 @@ case $1 in
     -S|--Serie)
         export Forceserie=1
         ;;
-    -p|--Progress)
+    -p|--progress)
         export prog_options="-v error -stats"
+        echo " using stats"
         ;;
-    -V|--verbose)
+    -V|--Verbose)
         export Verbose=1
         set -xv  # Set xtrace and verbose mode.
         ;;
