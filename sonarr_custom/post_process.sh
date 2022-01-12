@@ -67,7 +67,7 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     #log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     metatitle="${sonarr_series_title} : ${sonarr_episodefile_episodetitles}"
     log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
-    echo "Starting nvidia_ffmpeg.sh"
+    echo "Starting nvidia_ffmpeg.sh" >> ${mylogfile}
     echo ${log} >> ${mylogfile}
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
