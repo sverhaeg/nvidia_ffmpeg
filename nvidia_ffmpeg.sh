@@ -82,10 +82,13 @@ case $1 in
         ;;
     -f|--file)
         shift
-        export optfile=`basename $1`
+        export optfile=$(basename "$1")
+        echo "File is ${optfile}"
         if [[ -z ${optdir} ]]
         then
-            export optdir=`dirname $1`
+            export optdir=$(dirname "$1")
+            echo "Dir is ${optdir}"
+
         fi
         ;;
     -d|--dir)
