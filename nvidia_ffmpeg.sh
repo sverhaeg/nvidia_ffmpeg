@@ -82,7 +82,8 @@ case $1 in
         ;;
     -f|--file)
         shift
-        export optfile=$(basename $(printf "%q" "$1") )
+        optfile=$(basename "$1")
+        export optfile=$(printf "%q" "${optfile}") )
         echo "File is ${optfile}"
         if [[ -z ${optdir} ]]
         then
