@@ -82,7 +82,7 @@ case $1 in
         ;;
     -f|--file)
         shift
-        export optfile=$(basename "$1")
+        export optfile=$(basename $(printf "%q" "$1") )
         echo "File is ${optfile}"
         if [[ -z ${optdir} ]]
         then
@@ -185,7 +185,7 @@ fi
 
 ##echo "start"
 ##echo "dir provided ${optdir}"
-inputdir="${optdir}"
+inputdir=$(printf "%q" "${optdir}")
 ##echo "mode ${optenc}"
 # k is used because of old code with simple read
 case ${optenc} in
@@ -461,7 +461,7 @@ then
                 filesizeold=$(stat -c%s "${input}")
                 echo "Size of new ${filesizenew} vs old ${filesizeold}"
                 if (( filesizenew > filesizeold )); then
-                        echo "nope new file bigger [[ Force = ${Force} ]] ${input} "
+                        echo "nope new file bigger [[ Force = ${Force} ]] ${input} ################################SizeNoK################################"
                     if [[ -z ${Force} ]]
                     then
                         if [[ -z ${Forceserie} ]]
