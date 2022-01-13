@@ -186,7 +186,7 @@ fi
 
 ##echo "start"
 ##echo "dir provided ${optdir}"
-inputdir=$(printf "%q" "${optdir}")
+inputdir="${optdir}"
 ##echo "mode ${optenc}"
 # k is used because of old code with simple read
 case ${optenc} in
