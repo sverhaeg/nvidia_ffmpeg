@@ -19,17 +19,19 @@ plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh"
     now=$(date)
     echo "===================${now}===================" >> ${mylogfile}
     set | grep -e radarr >> ${mylogfile}
-    if [[ -z ${radarr_eventtype} ]]
-    then
-        echo "No radarr event type ... can't do anything" >> ${mylogfile}
-        exit
-    fi
-    if [[ ${radarr_eventtype} == "Test" ]]
-    then
-        echo "Test event ... can't do anything" >> ${mylogfile}
-        exit
-    fi
     echo "event type is ${radarr_eventtype} " >> ${mylogfile}
+    case ${radarr_eventtype} in
+        Test)
+            echo "Test event ... can't do anything" >> ${mylogfile}
+            exit
+        ;;
+        Upgrade|Download)
+            echo "Event type known [Upgrade|Download]"
+        ;;
+        *)
+            echo "No known event type ... can't do anything" >> ${mylogfile}
+            exit
+    esac
     echo "radarr_moviefile_path is ${radarr_moviefile_path}" >> ${mylogfile}
     # first time only sleep 5 firt time unless the file was not there otherwise 60
     filesleep="5"

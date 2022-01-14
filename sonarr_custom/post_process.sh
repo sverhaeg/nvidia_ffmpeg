@@ -18,21 +18,23 @@ grp="adults"
 plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
 #####################################################################
     now=$(date)
-    echo "===================${now}==================" >> ${mylogfile}
+    echo "===================${now}===================" >> ${mylogfile}
     set | grep -e sonarr >> ${mylogfile}
-    if [[ -z ${sonarr_eventtype} ]]
-    then
-        echo "No sonarr event type ... can't do anything" >> ${mylogfile}
-        exit
-    fi
-    if [[ sonarr_eventtype == "Test" ]]
-    then
-        echo "Test event ... can't do anything" >> ${mylogfile}
-        exit
-    fi
     echo "event type is ${sonarr_eventtype} " >> ${mylogfile}
+    case ${sonarr_eventtype} in
+        Test)
+            echo "Test event ... can't do anything" >> ${mylogfile}
+            exit
+            ;;
+        Upgrade|Download)
+            echo "Event type known [Upgrade|Download]"
+            ;;
+        *)
+            echo "No known event type ... can't do anything" >> ${mylogfile}
+            exit
+    esac
     sonarr_serie_path=$(dirname "${sonarr_episodefile_path}")
-    echo "sonarr_serie_path is ${sonarr_serie_path}" >> ${mylogfile}
+    echo "sonarr_serie_path is ${sonarr_serie_path} [not used]" >> ${mylogfile}
     # first time only sleep 5 firt time unless the file was not there otherwise 60
     filesleep="5"
     until [[ -f ${sonarr_episodefile_path} ]]
