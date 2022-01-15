@@ -497,6 +497,8 @@ then
                 echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio selected ${map_options_audio}" >> "work_${mypid}/.ffmpegconvert_done"
+                echo " ####### Audio was ${audio_lines} #######"
+                echo " ####### Audio selected ${map_options_audio} #######"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
             else
@@ -524,5 +526,4 @@ rm "work_${mypid}/.runningffmpegconvert"
 now=$(date)
 echo "Script ran with ${options} on $(date)"  >> "work_${mypid}/.ffmpegconvert_done"
 echo "Script ran with ${options} on $(date)"
-echo " Last Audio was ${audio_lines}"
 rm work_${mypid}
