@@ -19,7 +19,7 @@
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 ################################################################################################################################
-#if using snap ffmpeg you need to make sure files are in media or home
+# if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
 #  to set
 #    sudo snap connect ffmpeg:removable-media
