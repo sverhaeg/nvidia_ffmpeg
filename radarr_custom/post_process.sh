@@ -9,16 +9,19 @@
 # On Rename: No
 # Details on variables
 # https://wiki.servarr.com/Radarr_Tips_and_Tricks#Custom_Post_Processing_Scripts
-#######################  DO   Changes here    #######################
-mydir="/media/APPS/torrents/radarr_custom"
-mylogfile="${mydir}/my.log"
-### file .token needs single line ie. X-Plex-Token=xyYYYYYYYYzzzzzz6666
+#######################  DO Changes in config    #######################
+BASEDIR=$(dirname "$0")
+source ${BASEDIR}/.config
+### file .config needs
+# token=xyYYYYYYYYzzzzzz6666
+# section=2
+# grp="adults"
+# mydir="/media/APPS/torrents/radarr_custom"
+# mylogfile="${mydir}/my.log"
+# serverport="127.0.0.1:32400"
 # get the server token by opening https://plex.tv/pms/servers.xml?X-Plex-Token=<with a temp token from xml view of file >
-token=`cat ${mydir}/.token`
-grp="adults"
-# section 2 is movie refresh to refresh; using external ip iso 172
-plexrefresh="https://192.168.5.150:32400/library/sections/2/refresh?${token}"
-plexsection="https://192.168.5.150:32400/library/sections/2?${token}"
+plexrefresh="https://${serverport}/library/sections/${section}/refresh?X-Plex-Token=${token}"
+plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${token}"
 #####################################################################
     now=$(date)
     echo "===================${now}===================" >> ${mylogfile}
