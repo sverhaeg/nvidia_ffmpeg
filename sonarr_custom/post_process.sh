@@ -13,9 +13,13 @@
 #######################  DO   Changes here    #######################
 mydir="/media/APPS/torrents/sonarr_custom"
 mylogfile="${mydir}/my.log"
+### file .token needs single line ie. X-Plex-Token=xyYYYYYYYYzzzzzz6666
+# get the server token by opening https://plex.tv/pms/servers.xml?X-Plex-Token=<with a temp token from xml view of file>
+token=`cat ${mydir}/.token`
 grp="adults"
 # section 3 is series section to refresh; using external ip iso 172
-plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
+plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh?${token}"
+plexsection="https://192.168.5.150:32400/library/sections/3?${token}"
 #####################################################################
     now=$(date)
     echo "===================${now}===================" >> ${mylogfile}
@@ -78,4 +82,5 @@ plexrefresh="https://192.168.5.150:32400/library/sections/3/refresh"
     echo ${chgp} >> ${mylogfile}
     # -k to ignore certificate
     curl -k ${plexrefresh}
+    curl -k ${plexsection} >> ${mylogfile}
     exit
