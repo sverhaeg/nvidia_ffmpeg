@@ -42,6 +42,8 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     echo "radarr_moviefile_path is ${radarr_moviefile_path}" >> ${mylogfile}
     # first time only sleep 5 firt time unless the file was not there otherwise 60
     filesleep="5"
+    echo "====w plex section check=" >> ${mylogfile}
+    curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
     until [[ -f ${radarr_moviefile_path} ]]
     do
         echo "====waiting on ${radarr_moviefile_path} ===" >> ${mylogfile}
@@ -85,5 +87,4 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     echo ${chgp} >> ${mylogfile}
     # -k to ignore certificate curl -k
     curl -k ${plexrefresh}
-    curl -k ${plexsection} >> ${mylogfile}
     exit
