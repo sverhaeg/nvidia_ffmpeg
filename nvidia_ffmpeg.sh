@@ -18,6 +18,7 @@
 #@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
+#@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 ################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -200,7 +201,7 @@ case ${optenc} in
         ;;
     *)
         echo "No encoder set use 4|h264 or 5|h265|hvec"
-        exit 19
+        exit 204
 esac
             
 #
@@ -216,14 +217,14 @@ then
     then
             echo "skip because .runningffmpegconvert"
     rm work_${mypid}
-            exit 45
+            exit 220
     fi
     if [[ -f "work_${mypid}/.skipffmpegconvert" ]] && [[ -z ${Force} ]]
     then
             echo "skip because .skipffmpegconvert"
             rm "work_${mypid}/.runningffmpegconvert"
-    rm work_${mypid}
-            exit 53
+            rm work_${mypid}
+            exit 227
     fi
 
     echo "Running ${mypid}" >> work_${mypid}/.runningffmpegconvert
@@ -248,7 +249,7 @@ then
             then
                 echo " something went wrong, check work link "
                 rm "work_${mypid}/.runningffmpegconvert"
-                exit
+                exit 252
             fi
             if [[ -f work_${mypid}/${fileoutfull}.skipffmpegconvert ]] && [[ -z ${Force} ]]
                         then
@@ -424,7 +425,7 @@ then
                         ;;
                      *)
                         printf "Do not have a target encoder is not possible here ABORT"
-                        exit 161
+                        exit 428
             esac
             encoded_by="ffmpeg_nvidia_hardware"
             mkvtitle="" # Removing tag title is often bogus
@@ -452,6 +453,14 @@ then
                 sleep 600
             done
             echo " ok to start a new only running ${limit} jobs nvidia-smi type C"
+            echo "  check in output file \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" exists"
+                if [[ -f "work_${mypid}/${fileout}.AC3.${tagenc}.mkv" ]]
+                then
+                  echo "Aborting since output file exists"
+                  rm "work_${mypid}/.runningffmpegconvert"
+                  rm work_${mypid}
+                  exit 462
+                fi
             echo "starting encoding ################################encode################################"
             eval ${command_recode}
             cresult=$?
