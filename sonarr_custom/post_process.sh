@@ -45,7 +45,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     echo "sonarr_serie_path is ${sonarr_serie_path} [not used]" >> ${mylogfile}
     # first time only sleep 5 firt time unless the file was not there otherwise 60
     filesleep="5"
-    echo "====w plex section check=" >> ${mylogfile}
+    echo "==== plex section check=" >> ${mylogfile}
     curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
     until [[ -f ${sonarr_episodefile_path} ]]
 	do
