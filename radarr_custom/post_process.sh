@@ -77,7 +77,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #invoke nvidia convert
     #log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
     ## with file iso directory
-    echo "Starting nvidia_ffmpeg.sh" >> ${mylogfile}
+    echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
     echo "./nvidia_ffmpeg.sh -e 5 -f \"${radarr_moviefile_path}\" -t \"${radarr_movie_title}\" " >> ${mylogfile}
     log=`./nvidia_ffmpeg.sh -e 5 -f "${radarr_moviefile_path}" -t "${radarr_movie_title}" 2>&1`
     echo ${log} >> ${mylogfile}
