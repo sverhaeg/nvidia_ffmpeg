@@ -429,12 +429,12 @@ then
                         exit 428
             esac
             encoded_by="ffmpeg_nvidia_hardware"
-            mkvtitle="" # Removing tag title is often bogus
+            #mkvtitle="" # Removing tag title is often bogus #keep
             echo "using encoded_by ${encoded_by}"
             if [[ -z ${opttitle} ]]
             then
                 meta_title=${mkvtitle}
-                echo " no title set"
+                echo " no title set using mkvtitle"
             else
                 meta_title=${opttitle}
             fi
