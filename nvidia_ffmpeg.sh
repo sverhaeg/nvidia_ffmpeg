@@ -265,7 +265,6 @@ then
             audio_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Audio`
             #
             echo "mkvtitle:${mkvtitle}"
-            exit
             #since we are looping make sure whoencoded is cleared
             whoencoded="NOOne"
             #only get first encoded_by occurence this is mkv variable which is not standard so trusting this only used by this script and leaving option to use versions later
