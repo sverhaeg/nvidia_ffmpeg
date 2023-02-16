@@ -417,11 +417,11 @@ then
             # k is used because of old code with simple read
             case $k in
                     4)
-                        encoder="-c:V h264_nvenc -preset:V p7 -tune hq -rc cbr_hq -profile:V high -rc-lookahead 20"
+                        encoder="-c:V h264_nvenc -preset:V p7 -tune hq -rc cbr -profile:V high -rc-lookahead 20"
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -rc cbr_hq -profile:V main10 -rc-lookahead 20"
+                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -rc cbr -profile:V main10 -rc-lookahead 20"
                         tagenc="nvidia265"
                         ;;
                      *)
