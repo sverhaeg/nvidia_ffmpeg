@@ -19,7 +19,7 @@
 #@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
-#@(#)   v0.26   11feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec
+#@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 ###################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
