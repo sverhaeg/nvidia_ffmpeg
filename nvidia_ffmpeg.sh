@@ -240,6 +240,7 @@ then
     do
         echo "file $afile"
         decoder=""
+        mkv_lines=''
         input="${afile}"
         if [[ -f ${input} ]]
         then
@@ -261,6 +262,8 @@ then
             mkv_lines=`ffmpeg -nostdin -analyzeduration 100M -probesize 100M -i "${input}" 2>&1 | grep -v X11`
             video_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Video`
             audio_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Audio`
+            #
+            mkvtitle=`echo "${mkv_lines}" | grep -i "title" | head -1  |awk 'NR==0; END{print}' | sed "s/title *: //"`
             #since we are looping make sure whoencoded is cleared
             whoencoded="NOOne"
             #only get first encoded_by occurence this is mkv variable which is not standard so trusting this only used by this script and leaving option to use versions later
