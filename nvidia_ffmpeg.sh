@@ -263,9 +263,9 @@ then
             video_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Video`
             audio_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Audio`
             #
-            mkvtitle=`echo "${mkv_lines}" | grep -i "title" | head -1  |awk 'NR==0; END{print}' | sed "s/title *: //"`
+            mkvtitle=`echo "${mkv_lines}" | grep -i "title" | head -1  |awk 'NR==0; END{print}' | sed "s/title *: +//"`
             echo "mkvtitle ${mkvtitle}"
-            exit 
+            exit
             #since we are looping make sure whoencoded is cleared
             whoencoded="NOOne"
             #only get first encoded_by occurence this is mkv variable which is not standard so trusting this only used by this script and leaving option to use versions later
