@@ -38,11 +38,13 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -h,    -help,          --help                  Display help
 
--f,   -file,          --file                  Limit search to file partern (and use dirname for dir)
+-f,   -file,          --file                   Limit search to file partern (and use dirname for dir)
 
 -d,    -dir,           --dir                   Directory to scan and encode
 
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
+
+-t,    -title,         --title                 Title for metadata title
 
 -F,    -Force,         --Force                 Force encoding ignore .skip and encoded_by checks
 
