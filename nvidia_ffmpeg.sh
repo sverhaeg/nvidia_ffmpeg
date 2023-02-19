@@ -470,7 +470,7 @@ then
                   rm work_${mypid}
                   exit 462
                 fi
-            echo "\nstarting encoding \n################################encode################################"
+            echo "starting encoding ################################encode################################"
             eval ${command_recode}
             cresult=$?
             if [[ ${cresult} == 0 ]]
