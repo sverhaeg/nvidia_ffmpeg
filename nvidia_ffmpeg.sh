@@ -454,11 +454,12 @@ then
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
-            echo ${limit}
+            #$echo ${limit}
             while (( limit > 2 ))
             do
                 echo " to many jobs running ${limit} check nvidia-smi waiting 10 min"
                 sleep 600
+                limit=`nvidia-smi | grep " C " | wc -l`
             done
             echo " ok to start a new only running ${limit} jobs nvidia-smi type C"
             echo "  check in output file \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" exists"
