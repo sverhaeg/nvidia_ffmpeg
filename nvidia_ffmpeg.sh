@@ -462,7 +462,7 @@ then
                 limit=`nvidia-smi | grep " C " | wc -l`
             done
             echo " ok to start a new only running ${limit} jobs nvidia-smi type C"
-            echo "  check in output file \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" exists"
+            echo "  check if output file \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" doesn't exists"
                 if [[ -f "work_${mypid}/${fileout}.AC3.${tagenc}.mkv" ]]
                 then
                   echo "Aborting since output file exists"
@@ -470,7 +470,7 @@ then
                   rm work_${mypid}
                   exit 462
                 fi
-            echo "starting encoding ################################encode################################"
+            echo "\nstarting encoding \n################################encode################################"
             eval ${command_recode}
             cresult=$?
             if [[ ${cresult} == 0 ]]
