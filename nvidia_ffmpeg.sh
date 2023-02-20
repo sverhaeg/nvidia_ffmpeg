@@ -427,8 +427,8 @@ then
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -rc-lookahead:v 32 -spatial_aq 1 -vbr -cq=25 "
-                      #  encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -vbr -cq=25 "
+                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -rc-lookahead:v 32 -spatial_aq 1 -vbr -cq=18 "
+                      #  encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -vbr -cq=20 "
                         tagenc="nvidia265"
                         ;;
                      *)
