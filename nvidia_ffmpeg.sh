@@ -427,7 +427,7 @@ then
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -b:v 5M -bufsize 5M -maxrate 10M -qmin 0 -g 250 -temporal-aq 1 -rc-lookahead 32"
+                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -b:v 5M -bufsize 5M -maxrate 10M -temporal-aq 1 -rc-lookahead 32"
                         tagenc="nvidia265"
                         ;;
                      *)
