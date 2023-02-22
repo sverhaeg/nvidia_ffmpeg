@@ -437,11 +437,11 @@ then
             # k is used because of old code with simple read
             case $k in
                     4)
-                        encoder="-c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} "
+                        encoder="-c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} "
+                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia265"
                         ;;
                      *)
@@ -469,9 +469,10 @@ then
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
             #$echo ${limit}
-            while (( limit > 2 ))
+            while (( limit > 1 ))
             do
                 echo " to many jobs running ${limit} check nvidia-smi waiting 10 min"
+                # not added value to run more than 2 as encoder is already 100% with one job
                 sleep 600
                 limit=`nvidia-smi | grep " C " | wc -l`
             done
