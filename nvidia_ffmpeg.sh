@@ -20,7 +20,7 @@
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. Considering of making the -cq as an input option
+#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. With quality option "-cq 41"
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -44,6 +44,8 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 -d,    -dir,           --dir                   Directory to scan and encode
 
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
+
+-q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 41" ]
 
 -t,    -title,         --title                 Title for metadata title
 
@@ -71,7 +73,7 @@ EOF
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,title:,encoder:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,title:,encoder:,quality:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:q:s:o:" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -122,6 +124,10 @@ case $1 in
     -e|--encoder)
         shift
         export optenc=$1
+        ;;
+    -q|--quality)
+        shift
+        export optqual=$1
         ;;
     -a|--audiomap)
         shift
@@ -176,7 +182,14 @@ else
     map_options_audio=${optaud}
     audio_option_was_set=${optaud}
 fi
- 
+
+if [[ -z ${optqual} ]]
+then
+  cq_quality="-cq 41"
+else
+  cq_quality=${optqual}
+fi
+
 if [[ -z ${optopta} ]]
 then
     audio_subs_options="-c:s copy -c:a ac3 -b:a 640k" ## copy subs and covert audio to ac3 with 640k which is higest supported the default is 480k
@@ -424,11 +437,11 @@ then
             # k is used because of old code with simple read
             case $k in
                     4)
-                        encoder="-c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -cq 42 "
+                        encoder="-c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} "
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -cq 42 "
+                        encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} "
                         tagenc="nvidia265"
                         ;;
                      *)
