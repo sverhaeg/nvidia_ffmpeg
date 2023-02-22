@@ -20,7 +20,8 @@
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-###################################################################################################################################
+#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. Considering of making the -cq as an input option
+# ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
 #  to set
@@ -428,7 +429,6 @@ then
                         ;;
                     5)
                         encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -cq 42 "
-                      #  encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p7 -tune hq -profile:V main10 -rc-lookahead:v 32 -spatial_aq 1 -aq-strength 10 -vbr -cq=20 "
                         tagenc="nvidia265"
                         ;;
                      *)
