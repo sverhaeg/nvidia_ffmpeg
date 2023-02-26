@@ -446,12 +446,14 @@ then
                         tagenc="nvidia264"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-hwaccel_output_format cuda"
+                        joblim=1
                         ;;
                     5)
                         encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-hwaccel_output_format cuda"
+                        joblim=1
                         ;;
                     5hdr)
                         encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
@@ -460,6 +462,7 @@ then
                         #don't specify when tonemap is needed
                         hwaccelout=""
                         decoder=""
+                        joblim=0
                         ;;
                      *)
                         printf "Do not have a target encoder is not possible here ABORT"
@@ -487,7 +490,7 @@ then
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
             #$echo ${limit}
-            while (( limit > 1 ))
+            while (( limit > ${joblim} ))
             do
                 echo " to many jobs running ${limit} check nvidia-smi waiting 10 min"
                 # not added value to run more than 2 as encoder is already 100% with one job
