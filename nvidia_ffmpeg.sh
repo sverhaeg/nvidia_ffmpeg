@@ -21,7 +21,7 @@
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 #@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. With quality option "-cq 41"
-#@(#)   v0.27   26feb2023: Option 5hdr to allow HDR to SDR with tonemap # is slow 
+#@(#)   v0.27   26feb2023: Option 5hdr to allow HDR to SDR with tonemap # is slow
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -54,7 +54,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -S,    -Serie,         --Serie                 Do not mark directory .skipffmpegconvert however will not ignore these
 
--p,    -Progress       --Progress              Show progress stats ["-v error -stats"]
+-p,    -progress       --progress              Show progress stats ["-v error -stats"]
 
 -V,    -Verbose,       --Verbose               Verbose with set -xv
 
@@ -217,8 +217,12 @@ case ${optenc} in
         k=5
         ##echo "encode in 265"
         ;;
+    5hdr|h265hdr|hvechdr)
+              k=5hdr
+              ##echo "encode in 265 HDR mode"
+              ;;
     *)
-        echo "No encoder set use 4|h264 or 5|h265|hvec"
+        echo "No encoder set use 4|h264 or 5|h265|hvec or 5hdr|h265hdr|hvechdr"
         exit 204
 esac
             
