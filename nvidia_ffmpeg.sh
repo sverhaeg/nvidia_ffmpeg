@@ -21,6 +21,7 @@
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 #@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. With quality option "-cq 41"
+#@(#)   v0.27   26feb2023: Option 5hdr to allow HDR to SDR with tonemap # is slow 
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -384,42 +385,42 @@ then
                 #echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video"
                 case ${vtype} in
                     h264)
-                    decoder="h264_cuvid"
+                    decoder="-c:v h264_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     hevc)
-                        decoder="hevc_cuvid"
+                        decoder="-c:v hevc_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     mpeg4)
-                        decoder="mpeg4_cuvid"
+                        decoder="-c:v mpeg4_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     mpeg2video)
-                        decoder="mpeg2_cuvid"
+                        decoder="-c:v mpeg2_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     mpeg2)
-                        decoder="mpeg2_cuvid"
+                        decoder="-c:v mpeg2_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     vc1)
-                        decoder="vc1_cuvid"
+                        decoder="-c:v vc1_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     vp8)
-                        decoder="vp8_cuvid"
+                        decoder="-c:v vp8_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
                     vp9)
-                        decoder="vp9_cuvid"
+                        decoder="-c:v vp9_cuvid"
                         #found decoder stop reading video_lines
                         break
                         ;;
@@ -439,10 +440,22 @@ then
                     4)
                         encoder="-c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia264"
+                        hwaccel="-hwaccel cuda"
+                        hwaccelout="-hwaccel_output_format cuda"
                         ;;
                     5)
                         encoder="-vf scale_cuda=format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia265"
+                        hwaccel="-hwaccel cuda"
+                        hwaccelout="-hwaccel_output_format cuda"
+                        ;;
+                    5hdr)
+                        encoder="-vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
+                        tagenc="nvidia265"
+                        hwaccel="-hwaccel cuda"
+                        #don't specify when tonemap is needed
+                        hwaccelout=""
+                        decoder=""
                         ;;
                      *)
                         printf "Do not have a target encoder is not possible here ABORT"
@@ -463,9 +476,9 @@ then
             echo "using meta title ${meta_title}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
-            #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel cuvid -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
-            #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel cuda -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
-            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M -hwaccel nvdec -c:v ${decoder} -hwaccel_output_format cuda -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} {decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
