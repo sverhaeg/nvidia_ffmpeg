@@ -441,7 +441,7 @@ then
                         tagenc="nvidia264"
                         ;;
                     5)
-                        encoder="-vf scale_cuda=format=p010le,tonemap=tonemap=hable:desat=0 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
+                        encoder="-vf tonemap=tonemap=hable:desat=0,scale_cuda=format=p010le-c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia265"
                         ;;
                      *)
