@@ -22,7 +22,7 @@
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 #@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
 #@(#)   v0.27   26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
-#@(#)   v0.28   27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg
+#@(#)   v0.28   27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -45,7 +45,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -d,    -dir,           --dir                   Directory to scan and encode
 
--e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
+-e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec (or 5sdr|h265sdr|hvecsdr)
 
 -q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 40 -qmin 30 -qmax 42 -b:v 10M -maxrate:v 20M"]
 
