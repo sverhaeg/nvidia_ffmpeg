@@ -20,7 +20,7 @@
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40"
+#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
 #@(#)   v0.27   26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
@@ -46,7 +46,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
 
--q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 40 -qmin 35 -qmax 42 -b:v 10M -maxrate:v 20M"]
+-q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 40 -qmin 30 -qmax 42 -b:v 10M -maxrate:v 20M"]
 
 -t,    -title,         --title                 Title for metadata title
 
@@ -186,7 +186,7 @@ fi
 
 if [[ -z ${optqual} ]]
 then
-  cq_quality="-cq 40 -qmin 35 -qmax 42 -b:v 10M -maxrate:v 20M"
+  cq_quality="-cq 40 -qmin 30 -qmax 42 -b:v 10M -maxrate:v 20M"
 else
   cq_quality=${optqual}
 fi
