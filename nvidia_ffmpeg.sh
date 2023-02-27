@@ -387,7 +387,21 @@ then
                 vstream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
                 height=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\1/" `
                 width=`echo "${line}" | sed "s/^.* \([0-9]*\)x\([0-9]*\).*$/\2/" `
+                vcodingall=`echo "${line}" |sed "s/tv\,[[:space:]]*//" | cut -f2 -d ','| sed s/^[[:space:]]//`
+                vcodinga=`echo "${vcodingall}" | sed "s/\(.*\)(\(.*\)/\1/"`
+                vcodingb=`echo "${vcodingall}" | sed "s/\(.*\)(\(.*\))*/\2/" | sed "s/)//" `
                 #echo "${occ} ${vstream} ${vtype} ${height} x ${width} "  >> "details/\"${fileout}\".video"
+                echo "${occ} ${vstream} ${vtype} ${height} x ${width} code: ${vcodinga} ${vcodingb}"
+                if [[ ${vcodinga} == "yuv420p10le" ]]
+                then
+                   if [[ ${vcodingb} == "bt2020nc/bt2020/smpte2084" ]]
+                   then
+                     video_is_HDR="Yes"
+                     echo "Video is HDR encoded"
+                     exit
+                   fi
+                fi
+
                 case ${vtype} in
                     h264)
                     decoder="-c:v h264_cuvid"
