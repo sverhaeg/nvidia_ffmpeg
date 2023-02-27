@@ -20,8 +20,8 @@
 #@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. With quality option "-cq 41"
-#@(#)   v0.27   26feb2023: Option 5hdr to allow HDR to SDR with tonemap # is slow
+#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality of 41(42 was ok) , used avatar(1) 4k as reference. With quality option "max 41"
+#@(#)   v0.27   26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -46,7 +46,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec
 
--q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 41" ]
+-q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 30 -qmin 1 -qmax 41 -b:v 10M -maxrate:v 20M ]
 
 -t,    -title,         --title                 Title for metadata title
 
@@ -186,7 +186,7 @@ fi
 
 if [[ -z ${optqual} ]]
 then
-  cq_quality="-cq 41"
+  cq_quality="-cq 30 -qmin 1 -qmax 41 -b:v 10M -maxrate:v 20M"
 else
   cq_quality=${optqual}
 fi
@@ -217,8 +217,8 @@ case ${optenc} in
         k=5
         ##echo "encode in 265"
         ;;
-    5hdr|h265hdr|hvechdr)
-              k=5hdr
+    5sdr|h265sdr|hvecsdr)
+              k=5sdr
               ##echo "encode in 265 HDR mode"
               ;;
     *)
@@ -455,8 +455,9 @@ then
                         hwaccelout="-hwaccel_output_format cuda"
                         joblim=1
                         ;;
-                    5hdr)
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                    5sdr)
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=mobius,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                        #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         #don't specify when tonemap is needed
