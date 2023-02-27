@@ -22,6 +22,7 @@
 #@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 #@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
 #@(#)   v0.27   26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
+#@(#)   v0.28   27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -445,24 +446,27 @@ then
                         encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
                         tagenc="nvidia264"
                         hwaccel="-hwaccel cuda"
-                        hwaccelout="-hwaccel_output_format cuda"
+                        hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
                         joblim=1
                         ;;
                     5)
                         encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
-                        hwaccelout="-hwaccel_output_format cuda"
+                        hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
                         joblim=1
                         ;;
                     5sdr)
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=mobius,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                        # old version
+                        #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=mobius,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=w=-1:h=-1:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020,tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709
                         #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
-                        #don't specify when tonemap is needed
-                        hwaccelout=""
-                        decoder=""
+                        hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
+                        #V027 don't specify when tonemap is needed
+                        #hwaccelout=""
+                        #decoder=""
                         joblim=0
                         ;;
                      *)
@@ -486,7 +490,8 @@ then
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} {decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
-            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            #### use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg
+            command_recode=`echo "/usr/lib/jellyfin-ffmpeg/ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
