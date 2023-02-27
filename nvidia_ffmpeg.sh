@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.24
+#@(#) version 0.28
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
