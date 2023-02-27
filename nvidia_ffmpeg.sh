@@ -400,9 +400,8 @@ then
                      echo "Video is HDR encoded"
                      if [[ ${k} == 5 ]]
                      then
-                       k=5sdr
                        echo "Overwrite 5 to 5sdr"
-                       exit
+                       k=5sdr
                      fi
                    fi
                 fi
