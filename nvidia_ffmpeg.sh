@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.28
+#@(#) version 0.29
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -8,21 +8,22 @@
 #@(#)   v0.09	09jan2021 : max_muxing_queue_size 9999
 #@(#)   v0.09	11jan2021 : fileoutfull for rm suggestion
 #@(#)   v0.10	24jan2021 : enabled getopt with new feature to limit to one file and Force encoding
-#@(#)   v0.11   24jan2021 : additional encoders
-#@(#)   v0.12   06feb2021 : IFS correction for files
-#@(#)   v0.13   06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
-#@(#)   v0.14   12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
-#@(#)   v0.15   12dec2021 : .skip correction when error
-#@(#)   v0.16   31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
-#@(#)   v0.17   01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
-#@(#)   v0.20   02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
-#@(#)   v0.23   07jan2022 : auto select audio for all series files (map of first was used!)
-#@(#)   v0.24   12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
-#@(#)   v0.25   08oct2022 : check if output file already exists before encoding and redo exit numbers
-#@(#)   v0.26   16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-#@(#)   v0.27   21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
-#@(#)   v0.27   26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
-#@(#)   v0.28   27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
+#@(#)   v0.11 24jan2021 : additional encoders
+#@(#)   v0.12 06feb2021 : IFS correction for files
+#@(#)   v0.13 06mar2021 : .skip logic with fileoutfull instead of fileout + correct options -? broke all
+#@(#)   v0.14 12dec2021 : .skip logic with fileoutfull with .skipffmpegconvert at end iso of begin of file
+#@(#)   v0.15 12dec2021 : .skip correction when error
+#@(#)   v0.16 31dec2021 : added mpeg2video format and Serie option [.skipffmpegconvert skip for file is still done]
+#@(#)   v0.17 01jan2022 : print audiolines of original and correcting series output reincluding .ffmpegconvert_done output
+#@(#)   v0.20 02jan2022 : auto select best audio prefer eng; 5.1 or 7.1 ; ac3 or dts
+#@(#)   v0.23 07jan2022 : auto select audio for all series files (map of first was used!)
+#@(#)   v0.24 12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
+#@(#)   v0.25 08oct2022 : check if output file already exists before encoding and redo exit numbers
+#@(#)   v0.26 16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
+#@(#)   v0.27 21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
+#@(#)   v0.27 26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
+#@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
+#@(#)   v0.29 28feb2023: use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -476,9 +477,8 @@ then
                         ;;
                     5sdr)
                         # old version
-                        #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=mobius,zscale=t=bt709:m=bt709:r=tv,format=p010le"
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=w=-1:h=-1:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020,tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
                         #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=w=-1:h=-1:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020,tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
@@ -496,8 +496,29 @@ then
             echo "using encoded_by ${encoded_by}"
             if [[ -z ${opttitle} ]]
             then
-                meta_title=${mkvtitle}
-                echo " no title set using mkvtitle"
+              info_title=`grep -soP '(?<=<title>).*?(?=</title>)' work_${mypid}/${fileout}.xml`
+              if [[ ${info_title} == "" ]]
+              then
+                info_title=`grep -soP '(?<=<title>).*?(?=</title>)' work_${mypid}/${fileout}.nfo`
+                if [[ ${info_title} == "" ]]
+                then
+                   info_title=`grep -soP '(?<=<title>).*?(?=</title>)' work_${mypid}/movie.nfo`
+                   if [[ ${info_title} == "" ]]
+                   then
+                      echo " no title set using mkvtitle:${mkvtitle}"
+                      meta_title=${mkvtitle}
+                   else
+                      echo " no title set using movie.nfo:${info_title}"
+                      meta_title=${info_title}
+                   fi
+                else
+                   echo " no title set using ${fileout}.nfo:${info_title}"
+                   meta_title=${info_title}
+                fi
+              else
+                 echo " no title set using ${fileout}.xml:${info_title}"
+                 meta_title=${info_title}
+              fi
             else
                 meta_title=${opttitle}
             fi
