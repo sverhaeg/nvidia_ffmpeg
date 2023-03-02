@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.29
+#@(#) version 0.30
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -24,6 +24,7 @@
 #@(#)   v0.27 26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
 #@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
 #@(#)   v0.29 28feb2023: use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
+#@(#)   v0.30 02mar2023: Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -205,6 +206,13 @@ then
     prog_options="-v error"
 fi
 
+### setting PATH to include jellyfin-ffmpeg if present
+if [[ -d "/usr/lib/jellyfin-ffmpeg"]]
+        export PATH="/usr/lib/jellyfin-ffmpeg:$(sed 's#^/usr/lib/jellyfin-ffmpeg:##' <<< ${PATH} |sed 's#:/usr/lib/jellyfin-ffmpeg:#:#g' | sed 's#:/usr/lib/jellyfin-ffmpeg$##')"
+        echo "PATH=${PATH}"
+else
+        echo "/usr/lib/jellyfin-ffmpeg isn't present cuda_tonemap might not work"
+fi
 ##echo "start"
 ##echo "dir provided ${optdir}"
 inputdir="${optdir}"
@@ -529,8 +537,8 @@ then
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} {decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
-            #### use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg
-            command_recode=`echo "/usr/lib/jellyfin-ffmpeg/ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            #### use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg ... rely on PATH since .030
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
