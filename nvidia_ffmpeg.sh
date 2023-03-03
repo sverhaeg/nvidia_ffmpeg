@@ -207,7 +207,8 @@ then
 fi
 
 ### setting PATH to include jellyfin-ffmpeg if present
-if [[ -d "/usr/lib/jellyfin-ffmpeg"]]
+if [[ -d "/usr/lib/jellyfin-ffmpeg" ]]
+then
         export PATH="/usr/lib/jellyfin-ffmpeg:$(sed 's#^/usr/lib/jellyfin-ffmpeg:##' <<< ${PATH} |sed 's#:/usr/lib/jellyfin-ffmpeg:#:#g' | sed 's#:/usr/lib/jellyfin-ffmpeg$##')"
         echo "PATH=${PATH}"
 else
