@@ -21,8 +21,8 @@
 #@(#)   v0.25 08oct2022 : check if output file already exists before encoding and redo exit numbers
 #@(#)   v0.26 16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
 #@(#)   v0.27 21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
-#@(#)   v0.27 26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow
-#@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
+#@(#)   v0.27 26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow. Do not use on SDR content as it will mess up the colors.
+#@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Auto-encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
 #@(#)   v0.29 28feb2023: use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
 #@(#)   v0.30 02mar2023: Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
 # ##################################################################################################################################
@@ -209,6 +209,7 @@ fi
 ### setting PATH to include jellyfin-ffmpeg if present
 if [[ -d "/usr/lib/jellyfin-ffmpeg" ]]
 then
+        # put the jellyfin-ffmpeg in front and remove all other instances that already existed
         export PATH="/usr/lib/jellyfin-ffmpeg:$(sed 's#^/usr/lib/jellyfin-ffmpeg:##' <<< ${PATH} |sed 's#:/usr/lib/jellyfin-ffmpeg:#:#g' | sed 's#:/usr/lib/jellyfin-ffmpeg$##')"
         echo "PATH=${PATH}"
 else
