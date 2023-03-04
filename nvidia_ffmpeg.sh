@@ -25,6 +25,7 @@
 #@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Auto-encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
 #@(#)   v0.29 28feb2023: use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
 #@(#)   v0.30 02mar2023: Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
+#@(#)   v0.30 04mar2023: Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -405,10 +406,17 @@ then
                 echo "${occ} ${vstream} ${vtype} ${height} x ${width} code: ${vcodinga} ${vcodingb}"
                 if [[ ${vcodinga} == "yuv420p10le" ]]
                 then
+                   video_HDR_cuda_format=":format=p010le"
                    if [[ ${vcodingb} == "bt2020nc/bt2020/smpte2084" ]]
                    then
                      video_is_HDR="Yes"
                      echo "Video is HDR encoded"
+                     video_colorspace=`echo ${vcodingb} | cut -d'/' -f1`
+                     video_color_primaries=`echo ${vcodingb} | cut -d'/' -f1`
+                     video_color_trc=`echo ${vcodingb} | cut -d'/' -f1`
+                     echo "HDR: colorspace:=${video_colorspace} color_trc=${video_color_trc} color_primaries=${video_color_primaries}"
+                     video_HDR_color_parameters=",setparams=colorspace=${video_colorspace}:color_trc=${video_color_trc}:color_primaries=${video_color_primaries}"
+                     #:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020
                      if [[ ${k} == 5 ]]
                      then
                        echo "Overwrite 5 to 5sdr"
@@ -486,15 +494,18 @@ then
                         joblim=1
                         ;;
                     5sdr)
-                        # old version
-                        #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=w=-1:h=-1:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020,tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
+                        echo " Using ${video_HDR_cuda_format}${video_HDR_color_parameters} as scale_cuda option"
+                           # old version not using cuda [tonemap_cuda ]
+                           #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
+                        videofilter="-vf scale_cuda=w=-1:h=-1${video_HDR_cuda_format}${video_HDR_color_parameters},tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} ${videofilter}"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
                         #V027 don't specify when tonemap is needed
                         #hwaccelout=""
                         #decoder=""
+                        # Do not start 2 sessions as memory is limited and one tonemap session can go over 50% on GTX1050Ti
                         joblim=0
                         ;;
                      *)
@@ -570,6 +581,7 @@ then
                 filesizenew=$(stat -c%s "work_${mypid}/${fileout}.AC3.${tagenc}.mkv")
                 filesizeold=$(stat -c%s "${input}")
                 echo "Size of new ${filesizenew} vs old ${filesizeold}"
+                ### if (a > b ) is similar as if [ "$a" -gt "$b" ]
                 if (( filesizenew > filesizeold )); then
                         echo "nope new file bigger [[ Force = ${Force} ]] ${input} ################################SizeNoK################################"
                     if [[ -z ${Force} ]]
