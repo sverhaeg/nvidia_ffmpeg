@@ -412,8 +412,8 @@ then
                      video_is_HDR="Yes"
                      echo "Video is HDR encoded"
                      video_colorspace=`echo ${vcodingb} | cut -d'/' -f1`
-                     video_color_primaries=`echo ${vcodingb} | cut -d'/' -f1`
-                     video_color_trc=`echo ${vcodingb} | cut -d'/' -f1`
+                     video_color_primaries=`echo ${vcodingb} | cut -d'/' -f2`
+                     video_color_trc=`echo ${vcodingb} | cut -d'/' -f3`
                      echo "HDR: colorspace:=${video_colorspace} color_trc=${video_color_trc} color_primaries=${video_color_primaries}"
                      video_HDR_color_parameters=",setparams=colorspace=${video_colorspace}:color_trc=${video_color_trc}:color_primaries=${video_color_primaries}"
                      #:format=p010le,setparams=colorspace=bt2020nc:color_trc=smpte2084:color_primaries=bt2020
