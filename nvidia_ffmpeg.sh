@@ -351,6 +351,11 @@ then
                                 audioscore=$(( ${audioscore} + 25 ))
                            ;;
                     esac
+                    case ${alan} in
+                         fre)
+                                audioscore=$(( ${audioscore} + 5 ))
+                           ;;
+                    esac
                     # prefer ac3 over dts
                     case ${acod} in
                             ac3)
