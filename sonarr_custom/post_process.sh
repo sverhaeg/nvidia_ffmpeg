@@ -78,14 +78,18 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
     #log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     metatitle="${sonarr_series_title} : ${sonarr_episodefile_episodetitles}"
-    echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
-    echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${sonarr_episodefile_path}\" -t \"${metatitle}\""  >> ${mylogfile}
-    log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
-    echo ${log} >> ${mylogfile}
+    echo "### Adding ${sonarr_download_id} to queue" >> ${mylogfile}
+    #echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
+    mapped_path=`echo ${sonarr_episodefile_path} | eval ${mappings}`
+    echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\""  >> ${mylogfile}
+    jobname=${sonarr_download_id}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}
+    echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > ${mydir}/queue/${jobname}.added
+    #log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
+    #echo ${log} >> ${mylogfile}
     chmd=`chmod -Rf ug+rw "${sonarr_serie_path}" 2>&1`
     chgp=`chgrp -Rf ${grp} "${sonarr_serie_path}" 2>&1`
     echo ${chmd} >> ${mylogfile}
     echo ${chgp} >> ${mylogfile}
     # -k to ignore certificate
-    curl -k ${plexrefresh}
+    #curl -k ${plexrefresh}
     exit
