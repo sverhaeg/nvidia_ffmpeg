@@ -42,6 +42,6 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
 	    mv ${newjobfile} ${endjobfile}
     done
     # -k to ignore certificate curl -k
-    curl -k ${plexrefresh} 2>&1 1>/dev/null
+    curl -k ${plexrefresh} 1>/dev/null 2>&1
     rm "queue/.running"
     exit
