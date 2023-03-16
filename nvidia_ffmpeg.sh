@@ -190,7 +190,7 @@ fi
 
 if [[ -z ${optqual} ]]
 then
-  cq_quality="-cq 37 -qmin 29 -qmax 40 -b:v 10M -maxrate:v 20M"
+  cq_quality="-cq 37 -qmin 30 -qmax 40 -b:v 10M -maxrate:v 20M"
 else
   cq_quality=${optqual}
 fi
