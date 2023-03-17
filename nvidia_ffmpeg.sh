@@ -560,6 +560,7 @@ then
             echo "using append  ${tagenc}"
             echo "using meta title ${meta_title}"
             qualityffmpeg=$(sed 's#-##g' <<< ${cq_quality})
+            qualityffmpeg="${cq_quality}"
             echo "add quality meta info ${qualityffmpeg}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
             # decided after testing to use only features directly supported by nvidia and leave as much as possible defaults using preset hq which is best quality with max 3 b frames (bd is same with 2)
