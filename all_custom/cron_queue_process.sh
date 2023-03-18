@@ -19,11 +19,11 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     mydir=${myrealdir}
     mylogfile=${myreallogfile}
     now=$(date)
-    echo "===================${now}===================" >> ${mylogfile}
+    #echo "===================${now}===================" >> ${mylogfile}
     #echo "==== plex section check=" >> ${mylogfile}
     #curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
     cd "${mydir}"
-    pwd >> ${mylogfile}
+    #pwd >> ${mylogfile}
     if [[ -f "queue/.running" ]]
     then
 	    exit
