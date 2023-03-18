@@ -640,6 +640,10 @@ then
                 echo " ####### Audio selected ${map_options_audio} #######"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
+                echo "###################TAGS###################"
+                probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+                eval ${probe_command}
+                echo "###################TAGS###################"
             else
                 echo "Error ffmpeg result ${cresult}"
                 if [[ -z ${Forceserie} ]]
