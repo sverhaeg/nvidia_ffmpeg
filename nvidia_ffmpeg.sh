@@ -559,7 +559,7 @@ then
             echo "using encoder ${encoder}"
             echo "using append  ${tagenc}"
             echo "using meta title ${meta_title}"
-            qualityffmpeg=$(sed 's#-##g' <<< ${cq_quality})
+            #qualityffmpeg=$(sed 's#-##g' <<< ${cq_quality})
             qualityffmpeg="${cq_quality}"
             echo "add quality meta info ${qualityffmpeg}"
             # important use -nostdin otherwise ffmpeg will freeze when there're multiple files to encode in the same run
