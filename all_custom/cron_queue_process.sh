@@ -44,6 +44,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
 	    mv ${job} ${newjobfile} >> ${mylogfile}
             log=`. ${newjobfile} 2>&1`
 	    echo ${log} >> ${mylogfile}
+	    echo "1234567" >> ${mylogfile}
 	    mv ${newjobfile} ${endjobfile}
 	    # -k to ignore certificate curl -k
       curl -k ${plexrefresh} 1>/dev/null 2>&1
