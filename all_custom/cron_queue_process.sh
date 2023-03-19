@@ -21,7 +21,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     # now=$(date +"%x_%X")
     # Only show time
     now=$(date +"%H:%M ")
-    echo -n "${now}=" >> ${mylogfile}
+    echo -ne "\b\b\b\b\b\b\b${now}=" >> ${mylogfile}
     #echo "==== plex section check=" >> ${mylogfile}
     #curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
     cd "${mydir}"
