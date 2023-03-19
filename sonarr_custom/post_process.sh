@@ -82,7 +82,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
     mapped_path=`echo ${sonarr_episodefile_path} | eval ${mappings}`
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\""  >> ${mylogfile}
-    jobname=${sonarr_download_id}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}
+    jobname=${sonarr_episodefile_scenename}${sonarr_download_id}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > ${mydir}/queue/${jobname}.added
     #log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
     #echo ${log} >> ${mylogfile}

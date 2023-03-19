@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.30
+#@(#) version 0.31
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -19,13 +19,14 @@
 #@(#)   v0.23 07jan2022 : auto select audio for all series files (map of first was used!)
 #@(#)   v0.24 12jan2022 : default no more stats output only when -p -Progress and better basename and dirname for -f
 #@(#)   v0.25 08oct2022 : check if output file already exists before encoding and redo exit numbers
-#@(#)   v0.26 16feb2023: use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
-#@(#)   v0.27 21feb2023: encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
-#@(#)   v0.27 26feb2023: Option 5sdr to allow HDR to SDR with tonemap mobius # is slow. Do not use on SDR content as it will mess up the colors.
-#@(#)   v0.28 27feb2023: use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Auto-encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
-#@(#)   v0.29 28feb2023: use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
-#@(#)   v0.30 02mar2023: Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
-#@(#)   v0.30 04mar2023: Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
+#@(#)   v0.26 16feb2023 : use hw accell cuda instead of cuvid leaving output to cuda (not auto) and change preset to p7 -tune hq and 10 bit p010le for hvec + better title is being preserved
+#@(#)   v0.27 21feb2023 : encoding with p6 hq with a minimal quality (42 was just ok, 40 good) , used avatar(1) 4k as reference. With quality option "max 42 and cq of 40" min is now 30 but looks ok at 35(avatar)
+#@(#)   v0.27 26feb2023 : Option 5sdr to allow HDR to SDR with tonemap mobius # is slow. Do not use on SDR content as it will mess up the colors.
+#@(#)   v0.28 27feb2023 : use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg. Auto-encode HDR content to SDR(5sdr|h265sdr|hvecsdr) when using 5|h265|hvec
+#@(#)   v0.29 28feb2023 : use [[file].xml , [[file]].nfo or movie.nfo files to get the title before using the file_tag
+#@(#)   v0.30 02mar2023 : Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
+#@(#)   v0.30 04mar2023 : Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
+#@(#)   v0.31 19mar2023 : recording ffmpeg_passes in metadata
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
