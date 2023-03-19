@@ -20,7 +20,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     mylogfile=${myreallogfile}
     # now=$(date +"%x_%X")
     # Only show time
-    now=$(date +"%X")
+    now=$(date +"%X ")
     echo -n "=${now}=" >> ${mylogfile}
     #echo "==== plex section check=" >> ${mylogfile}
     #curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
@@ -35,7 +35,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     for job in `find ./queue -name "*.added" -type f`
     do
       echo "===" >> ${mylogfile}
-      now=$(date +"%x_%X")
+      now=$(date +"%x_%X ")
       echo "=${now}=" >> ${mylogfile}
 	    echo "${job} found " >> ${mylogfile}
 	    newjobfile=$(sed 's/added$/converting/' <<< ${job})
