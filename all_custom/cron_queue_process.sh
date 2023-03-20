@@ -21,7 +21,8 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     # now=$(date +"%x_%X")
     # Only show time
     now=$(date +"%H:%M ")
-    echo -ne "\b\b\b\b\b\b\b${now}=" >> ${mylogfile}
+    crontime="${mydir}/cron.last"
+    echo -ne "${now}=" > ${crontime}
     #echo "==== plex section check=" >> ${mylogfile}
     #curl -k ${plexsection} | grep -e key\=\"all\" >> ${mylogfile}
     cd "${mydir}"
@@ -44,7 +45,6 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
 	    mv ${job} ${newjobfile} >> ${mylogfile}
             log=`. ${newjobfile} 2>&1`
 	    echo ${log} >> ${mylogfile}
-	    echo "C:________" >> ${mylogfile}
 	    mv ${newjobfile} ${endjobfile}
 	    # -k to ignore certificate curl -k
       curl -k ${plexrefresh} 1>/dev/null 2>&1
