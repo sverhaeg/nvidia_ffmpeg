@@ -632,7 +632,7 @@ then
                     eval ${cpsrtcmd}
                 done
                 mvcmd=`echo "mv \"${input}\" \"${input}_converted_${tagenc}\""`
-                echo "rm '${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
+                echo "'${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
                 now=$(date)
                 echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
@@ -652,7 +652,7 @@ then
                     echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
                 fi
                 echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
-                echo "Reason ffmpeg error '${inputdir}' ${cresult}" >> conversion_failed
+                echo "Reason ffmpeg error '${inputdir}' ${fileoutfull}  ${cresult}" >> conversion_failed
                 rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                 #Try next movie file, this will try all files ones in this (series) directory and skip next time
                                 continue
