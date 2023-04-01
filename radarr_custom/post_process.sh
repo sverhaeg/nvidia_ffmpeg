@@ -78,11 +78,13 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #log=`./nvidia_ffmpeg.sh -e 5 -d "${radarr_movie_path}" 2>&1`
     ## with file iso directory
     echo "### Adding ${radarr_download_id} to queue" >> ${mylogfile}
-    echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
     mapped_path=`echo ${radarr_moviefile_path} | eval ${mappings}`
     echo "./nvidia_ffmpeg.sh -e 5 -f \"${mapped_path}\" -t \"${radarr_movie_title}\" " >> ${mylogfile}
     jobname=${radarr_moviefile_scenename}${radarr_download_id}_${radarr_movie_id}_${radarr_movie_tmdbid}
     echo "./nvidia_ffmpeg.sh -e 5 -f \"${mapped_path}\" -t \"${radarr_movie_title}\" " > ${mydir}/queue/${jobname}.added
+    ls -la ${mydir}/queue/${jobname}.added
+    cat ${mydir}/queue/${jobname}.added
+    echo "### Adding to queue done"
     #log=`./nvidia_ffmpeg.sh -e 5 -f "${radarr_moviefile_path}" -t "${radarr_movie_title}" 2>&1`
     #echo ${log} >> ${mylogfile}
     chmd=`chmod -Rf ug+rw "${radarr_movie_path}" 2>&1`

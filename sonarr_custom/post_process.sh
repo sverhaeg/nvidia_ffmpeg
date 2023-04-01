@@ -79,11 +79,13 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     metatitle="${sonarr_series_title} : ${sonarr_episodefile_episodetitles}"
     echo "### Adding ${sonarr_download_id} to queue" >> ${mylogfile}
-    #echo "### Starting nvidia_ffmpeg.sh" >> ${mylogfile}
     mapped_path=`echo ${sonarr_episodefile_path} | eval ${mappings}`
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\""  >> ${mylogfile}
     jobname=${sonarr_episodefile_scenename}${sonarr_download_id}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > ${mydir}/queue/${jobname}.added
+    ls -la ${mydir}/queue/${jobname}.added
+    cat ${mydir}/queue/${jobname}.added
+    echo "### Adding to queue done"
     #log=`./nvidia_ffmpeg.sh -S -e 5 -f "${sonarr_episodefile_path}" -t "${metatitle}" 2>&1`
     #echo ${log} >> ${mylogfile}
     chmd=`chmod -Rf ug+rw "${sonarr_serie_path}" 2>&1`
