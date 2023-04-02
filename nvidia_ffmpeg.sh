@@ -263,6 +263,12 @@ then
             exit 227
     fi
 
+    if [[ -f "work_${mypid}/.skipffmpegconvert" ]]
+    then
+          echo "skip with force, removing .skipffmpegconvert"
+          rm "work_${mypid}/.skipffmpegconvert"
+    fi
+
     echo "Running ${mypid}" >> work_${mypid}/.runningffmpegconvert
     if [[ -z ${optfile} ]]
     then
