@@ -82,8 +82,8 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     echo "./nvidia_ffmpeg.sh -e 5 -f \"${mapped_path}\" -t \"${radarr_movie_title}\" " >> ${mylogfile}
     jobname="${radarr_download_id}_${radarr_movie_title}_${radarr_movie_id}_${radarr_movie_tmdbid}"
     echo "./nvidia_ffmpeg.sh -e 5 -f \"${mapped_path}\" -t \"${radarr_movie_title}\" " > ${mydir}/queue/${jobname}.added
-    ls -la ${mydir}/queue/${jobname}.added >> ${mylogfile}
-    cat ${mydir}/queue/${jobname}.added >> ${mylogfile}
+    ls -la "${mydir}/queue/${jobname}.added" >> ${mylogfile}
+    cat "${mydir}/queue/${jobname}.added" >> ${mylogfile}
     echo "### Adding to queue done" >> ${mylogfile}
     #log=`./nvidia_ffmpeg.sh -e 5 -f "${radarr_moviefile_path}" -t "${radarr_movie_title}" 2>&1`
     #echo ${log} >> ${mylogfile}
