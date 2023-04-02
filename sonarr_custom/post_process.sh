@@ -78,10 +78,10 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     #invoke nvidia convert use Serie option for sonarr otherwise only first episode will be converted if there's a skip condition
     #log=`./nvidia_ffmpeg.sh -S -e 5 -d "${sonarr_serie_path}" 2>&1`
     metatitle="${sonarr_series_title} : ${sonarr_episodefile_episodetitles}"
-    echo "### Adding ${sonarr_download_id} to queue" >> ${mylogfile}
+    jobname="${sonarr_download_id}_${sonarr_series_title}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}"
+    echo "### Adding ${sonarr_download_id} to queue as ${jobname}" >> ${mylogfile}
     mapped_path=`echo ${sonarr_episodefile_path} | eval ${mappings}`
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\""  >> ${mylogfile}
-    jobname="${sonarr_download_id}_${sonarr_series_title}_${sonarr_episodefile_id}_${sonarr_episodefile_episodecount}_${sonarr_episodefile_episodeids}_${sonarr_episodefile_episodenumbers}"
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > ${mydir}/queue/${jobname}.added
     ls -la "${mydir}/queue/${jobname}.added" >> ${mylogfile}
     cat "${mydir}/queue/${jobname}.added" >> ${mylogfile}
