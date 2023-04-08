@@ -82,7 +82,7 @@ plexsection="https://${serverport}/library/sections/${section}?X-Plex-Token=${to
     echo "### Adding ${sonarr_download_id} to queue as ${jobname}" >> ${mylogfile}
     mapped_path=`echo ${sonarr_episodefile_path} | eval ${mappings}`
     echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\""  >> ${mylogfile}
-    echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > ${mydir}/queue/${jobname}.added
+    echo "./nvidia_ffmpeg.sh -S -e 5 -f \"${mapped_path}\" -t \"${metatitle}\" "  > "${mydir}/queue/${jobname}.added"
     ls -la "${mydir}/queue/${jobname}.added" >> ${mylogfile}
     cat "${mydir}/queue/${jobname}.added" >> ${mylogfile}
     echo "### Adding to queue done" >> ${mylogfile}
