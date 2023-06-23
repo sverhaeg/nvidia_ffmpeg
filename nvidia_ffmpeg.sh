@@ -272,10 +272,11 @@ then
     echo "Running ${mypid}" >> work_${mypid}/.runningffmpegconvert
     if [[ -z ${optfile} ]]
     then
-        allfiles=`find "work_${mypid}/" -maxdepth 1 -mindepth 1 -type f -size +250M -and  -not \( -name ".*" -or -name "*.AC3.nvidia264.mkv" -or -name "*.AC3.nvidia265.mkv"  \) -and  \( -name "*.mp4" -or -name "*.mkv" -or -name "*.m2ts" -or -name "*.m4v" -or -name "*.avi" \) -print `
+        allfiles=`find "work_${mypid}/" -maxdepth 1 -mindepth 1 -type f -size +200M -and  -not \( -name ".*" -or -name "*.AC3.nvidia264.mkv" -or -name "*.AC3.nvidia265.mkv"  \) -and  \( -name "*.mp4" -or -name "*.mkv" -or -name "*.m2ts" -or -name "*.m4v" -or -name "*.avi" \) -print `
     else
         allfiles=`find "work_${mypid}/" -maxdepth 1 -mindepth 1 -name "${optfile}" -print `
     fi
+    echo "got all files ${allfiles}"
     IFS=$'\n'
     for afile in ${allfiles}
     do
