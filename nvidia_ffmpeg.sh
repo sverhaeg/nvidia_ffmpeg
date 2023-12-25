@@ -27,6 +27,7 @@
 #@(#)   v0.30 02mar2023 : Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
 #@(#)   v0.30 04mar2023 : Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
 #@(#)   v0.31 19mar2023 : recording ffmpeg_passes in metadata
+#@(#)   v0.32 25dec2023 : Added deinterlacing [-vf yadif] option to convert old DVDs
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -68,7 +69,8 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 -s,    -submap,        --submap                Overwrite default subtitle mapping ["-map 0:s:m:language:dut? -map 0:s:m:language:eng? -map 0:s:m:language:fra?"] -- subtitles 3 languanges
 
 -o,    -optionaudio,   --optionaudio           Overwrite audio and sub otpions ["-c:s copy -c:a ac3 -b:a 640k"] -- copy subs and audio in ac3 640k bitrate
-EOF
+
+-y,    -yadif,         --yadif                 Deinterlacing using yadif_cuda
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
@@ -79,7 +81,7 @@ EOF
 # -l is for long options with double dash like --version
 # the comma separates different long options
 # -a is for long options with single dash like -version
-options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,title:,encoder:,quality:,audiomap:,submap:,optionaudio:" -o "hf:d:pVFSt:e:a:q:s:o:" -a -- "$@")
+options=$(getopt -l "help,file:,dir:,Verbose,progress,Force,Serie,title:,encoder:,quality:,audiomap:,submap:,optionaudio:,yadif" -o "hf:d:pVFSt:e:a:q:s:o:y" -a -- "$@")
 
 #set --:
 # If no arguments follow this option, then the positional parameters are unset. Otherwise, the positional parameters
@@ -146,6 +148,10 @@ case $1 in
     -o|--optionaudio)
         shift
         export optopta=$1
+        ;;
+    -y|--yadif)
+        export yadif="-vf yadif_cuda "
+        ##is put in front of encode so need space at the end
         ;;
     --)
         shift
@@ -577,7 +583,7 @@ then
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} {decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #### use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg ... rely on PATH since .030
-            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata ffmpeg_passes=${ffmpeg_passes} -metadata ffmpeg_quality=\"${qualityffmpeg}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata ffmpeg_passes=${ffmpeg_passes} -metadata ffmpeg_quality=\"${qualityffmpeg}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${yadif}${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
