@@ -71,6 +71,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 -o,    -optionaudio,   --optionaudio           Overwrite audio and sub otpions ["-c:s copy -c:a ac3 -b:a 640k"] -- copy subs and audio in ac3 640k bitrate
 
 -y,    -yadif,         --yadif                 Deinterlacing using yadif_cuda
+EOF
 # EOF is found above and hence cat command stops reading. This is equivalent to echo but much neater when printing out.
 }
 
