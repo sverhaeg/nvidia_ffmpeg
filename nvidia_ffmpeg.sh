@@ -219,8 +219,8 @@ then
     yadif4=""
     yadif5=""
 else
-    yadif4="yadif_cuda=0:-1:0"
-    yadif5="yadif_cuda=0:-1:0,"
+    yadif4="yadif_cuda=1:-1:0"
+    yadif5="yadif_cuda=1:-1:0,"
 fi
 
 ### setting PATH to include jellyfin-ffmpeg if present
