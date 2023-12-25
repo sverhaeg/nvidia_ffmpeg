@@ -219,8 +219,9 @@ then
     yadif4=""
     yadif5=""
 else
-    yadif4="yadif_cuda=1:-1:0"
-    yadif5="yadif_cuda=1:-1:0,"
+    ## 1 iso 0 : double frame rate iso single frame rate
+    yadif4="yadif_cuda=1"
+    yadif5="yadif_cuda=1,"
 fi
 
 ### setting PATH to include jellyfin-ffmpeg if present
