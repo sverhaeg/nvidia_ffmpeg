@@ -214,12 +214,13 @@ then
     prog_options="-v error"
 fi
 
-if [[ -z ${optyadif}]]
+if [[ -z ${optyadif} ]]
 then
     yadif=""
 else
     yadif="yadif_cuda=0:-1:0,"
 fi
+
 ### setting PATH to include jellyfin-ffmpeg if present
 if [[ -d "/usr/lib/jellyfin-ffmpeg" ]]
 then
