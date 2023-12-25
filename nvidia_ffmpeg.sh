@@ -216,9 +216,11 @@ fi
 
 if [[ -z ${optyadif} ]]
 then
-    yadif=""
+    yadif4=""
+    yadif5=""
 else
-    yadif="yadif_cuda=0:-1:0,"
+    yadif4="yadif_cuda=0:-1:0"
+    yadif5="yadif_cuda=0:-1:0,"
 fi
 
 ### setting PATH to include jellyfin-ffmpeg if present
@@ -514,8 +516,12 @@ then
             case $k in
                     4)
                         ##encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
-                        videofilter=""
-                        videofilter="-vf ${yadif}"
+                        if [[ -z ${optyadif} ]]
+                        then
+                          videofilter=""
+                        else
+                          videofilter="-vf ${yadif4}"
+                        fi
                         encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 ${cq_quality} ${videofilter}"
                         tagenc="nvidia264"
                         hwaccel="-hwaccel cuda"
@@ -524,7 +530,7 @@ then
                         ;;
                     5)
                         ##encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=format=p010le"
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf ${yadif}scale_cuda=format=p010le"
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf ${yadif5}scale_cuda=format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
@@ -534,7 +540,7 @@ then
                         echo " Using ${video_HDR_cuda_format}${video_HDR_color_parameters} as scale_cuda option"
                            # old version not using cuda [tonemap_cuda ]
                            #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
-                        videofilter="-vf ${yadif}scale_cuda=w=-1:h=-1${video_HDR_cuda_format}${video_HDR_color_parameters},tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
+                        videofilter="-vf ${yadif5}scale_cuda=w=-1:h=-1${video_HDR_cuda_format}${video_HDR_color_parameters},tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
                         #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} ${videofilter}"
                         encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} ${videofilter}"
                         tagenc="nvidia265"
