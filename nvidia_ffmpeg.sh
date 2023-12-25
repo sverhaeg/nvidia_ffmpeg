@@ -151,7 +151,7 @@ case $1 in
         export optopta=$1
         ;;
     -y|--yadif)
-        export yadif="yadif_cuda=0:-1:0,"
+        export optyadif=1
         ;;
     --)
         shift
@@ -214,6 +214,12 @@ then
     prog_options="-v error"
 fi
 
+if [[ -z ${optyadif}]]
+then
+    yadif=""
+else
+    yadif="yadif_cuda=0:-1:0,"
+fi
 ### setting PATH to include jellyfin-ffmpeg if present
 if [[ -d "/usr/lib/jellyfin-ffmpeg" ]]
 then
@@ -507,7 +513,9 @@ then
             case $k in
                     4)
                         ##encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality}"
-                        encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 ${cq_quality}"
+                        videofilter=""
+                        videofilter="-vf ${yadif}"
+                        encoder="-threads 2 -c:V h264_nvenc -preset:V p5 -tune hq -profile:V high -rc vbr -rc-lookahead:v 30 ${cq_quality} ${videofilter}"
                         tagenc="nvidia264"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
