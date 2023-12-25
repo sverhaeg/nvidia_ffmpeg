@@ -151,8 +151,7 @@ case $1 in
         export optopta=$1
         ;;
     -y|--yadif)
-        export yadif="-vf yadif_cuda "
-        ##is put in front of encode so need space at the end
+        export yadif="yadif_cuda=0:-1:0,"
         ;;
     --)
         shift
@@ -516,7 +515,7 @@ then
                         ;;
                     5)
                         ##encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=format=p010le"
-                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf scale_cuda=format=p010le"
+                        encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf ${yadif}scale_cuda=format=p010le"
                         tagenc="nvidia265"
                         hwaccel="-hwaccel cuda"
                         hwaccelout="-init_hw_device cuda=gpu:0 -filter_hw_device gpu -hwaccel_output_format cuda"
@@ -526,7 +525,7 @@ then
                         echo " Using ${video_HDR_cuda_format}${video_HDR_color_parameters} as scale_cuda option"
                            # old version not using cuda [tonemap_cuda ]
                            #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} -vf zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=mobius:desat=0,zscale=t=bt709:m=bt709:r=tv,format=p010le"
-                        videofilter="-vf scale_cuda=w=-1:h=-1${video_HDR_cuda_format}${video_HDR_color_parameters},tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
+                        videofilter="-vf ${yadif}scale_cuda=w=-1:h=-1${video_HDR_cuda_format}${video_HDR_color_parameters},tonemap_cuda=tonemap=bt2390:desat=0:peak=0:format=p010le,setparams=colorspace=bt709:color_trc=bt709:color_primaries=bt709"
                         #encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} ${videofilter}"
                         encoder="-threads 2 -c:V hevc_nvenc -preset:V p6 -tune hq -profile:V main10 -rc vbr -rc-lookahead:v 30 -spatial_aq 1 -aq-strength 10 ${cq_quality} ${videofilter}"
                         tagenc="nvidia265"
@@ -584,7 +583,7 @@ then
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} {decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             #### use ffmpeg provide by jellyfin with cuda enabled /usr/lib/jellyfin-ffmpeg/ffmpeg ... rely on PATH since .030
-            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata ffmpeg_passes=${ffmpeg_passes} -metadata ffmpeg_quality=\"${qualityffmpeg}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${yadif}${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+            command_recode=`echo "ffmpeg -nostdin ${prog_options} -analyzeduration 100M -probesize 100M ${hwaccel} ${decoder} ${hwaccelout} -i \"${input}\" -metadata ffmpeg_passes=${ffmpeg_passes} -metadata ffmpeg_quality=\"${qualityffmpeg}\" -metadata title=\"${meta_title}\" -metadata encoded_by=${encoded_by} ${map_options} ${encoder} ${audio_subs_options} -map_metadata 0 -movflags use_metadata_tags -max_muxing_queue_size 9999 \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
             echo "command to recode : ${command_recode}"
             # nvidia-smi encodersessions not working
             limit=`nvidia-smi | grep " C " | wc -l`
