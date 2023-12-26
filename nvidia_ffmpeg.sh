@@ -27,7 +27,7 @@
 #@(#)   v0.30 02mar2023 : Include /usr/lib/jellyfin-ffmpeg in PATH instead of hardcoding directory in ffmpeg command
 #@(#)   v0.30 04mar2023 : Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
 #@(#)   v0.31 19mar2023 : recording ffmpeg_passes in metadata
-#@(#)   v0.32 25dec2023 : Added deinterlacing [-vf yadif] option to convert old DVDs
+#@(#)   v0.32 25dec2023 : Added deinterlacing [-vf yadif] option to convert old DVDs and increased cq to 36 again
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -52,7 +52,7 @@ Encode all known video files using nvidia cuvid hardware for decoding and encodi
 
 -e,    -encoder,       --encoder               Enocoder 4|h264 or 5|h265|hvec (or 5sdr|h265sdr|hvecsdr)
 
--q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 40 -qmin 30 -qmax 42 -b:v 10M -maxrate:v 20M"]
+-q,    -quality,       --quality               Minimal encoding quality string [default : "-cq 36 -qmin 30 -qmax 40 -b:v 10M -maxrate:v 20M"]
 
 -t,    -title,         --title                 Title for metadata title
 
@@ -197,7 +197,7 @@ fi
 
 if [[ -z ${optqual} ]]
 then
-  cq_quality="-cq 37 -qmin 30 -qmax 40 -b:v 10M -maxrate:v 20M"
+  cq_quality="-cq 36 -qmin 30 -qmax 40 -b:v 10M -maxrate:v 20M"
 else
   cq_quality=${optqual}
 fi
