@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.32
+#@(#) version 0.33
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -28,6 +28,8 @@
 #@(#)   v0.30 04mar2023 : Prepare for more HDR color_options use colorspace color_trc color_primaries from source "bt2020nc/bt2020/smpte2084"
 #@(#)   v0.31 19mar2023 : recording ffmpeg_passes in metadata
 #@(#)   v0.32 25dec2023 : Added deinterlacing [-vf yadif] option to convert old DVDs and increased cq to 36 again
+#@(#)   v0.32 02mar2024 : correct converted filename
+#@(#)   v0.33 28apr2024 : stop putting .skipffmpegconvert in directory when failure
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -634,10 +636,11 @@ then
                         echo "nope new file bigger [[ Force = ${Force} ]] ${input} ################################SizeNoK################################"
                     if [[ -z ${Force} ]]
                     then
-                        if [[ -z ${Forceserie} ]]
-                        then
-                            echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
-                        fi
+                        # v0.33 stop .skip for dir even for non-serie
+                        #if [[ -z ${Forceserie} ]]
+                        #then
+                        #    echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/.skipffmpegconvert"
+                        #fi
                         echo "Reason conversion larger '${inputdir}' file ${fileout} " >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                         rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
                         #Try next movie file, this will try all files ones in this (series) directory and skip next time
@@ -676,10 +679,11 @@ then
                 echo "###################TAGS###################"
             else
                 echo "Error ffmpeg result ${cresult}"
-                if [[ -z ${Forceserie} ]]
-                then
-                    echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
-                fi
+                # v0.33 stop .skip for dir even for non-serie
+                #if [[ -z ${Forceserie} ]]
+                #then
+                #    echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/.skipffmpegconvert"
+                #fi
                 echo "Reason ffmpeg error '${inputdir}' file ${fileout} : ${cresult}" >> "work_${mypid}/${fileoutfull}.skipffmpegconvert"
                 echo "Reason ffmpeg error '${inputdir}' ${fileoutfull}  ${cresult}" >> conversion_failed
                 rm "work_${mypid}/${fileout}.AC3.${tagenc}.mkv"
