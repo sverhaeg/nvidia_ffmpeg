@@ -653,16 +653,17 @@ then
                 fi
                 echo "post processing finding str ################################post################################"
                 #find "work_${mypid}/" -maxdepth 2 -mindepth 1 -type f -and \( -name "*.srt" -or -name "*.nfo" -or -name "*.jpg" -or -name "*.smi" -or -name "*.idx" -or -name "*.sub" \) -and -not \( -name "*.nvidia264.*" -or -name "*.nvidia265.*" \) -print0 | while read -d $'\0' srtfile
-                find "work_${mypid}/" -maxdepth 2 -mindepth 1 -type f -name "${fileout}*" -and \( -name "*.srt" -or -name "*.nfo" -or -name "*.jpg" -or -name "*.smi" -or -name "*.idx" -or -name "*.sub" \) -and -not \( -name "*.AC3.nvidia264.*" -or -name "*.AC3.nvidia265.*" \) -print0 | while read -d $'\0' srtfile
-                do
-                    echo "original ${srtfile} need ${fileout} with AC3 and ${tagenc}"
-                    newstr=`echo "${srtfile}" | sed "s/${fileout}/${fileout}.AC3.${tagenc}/"`
-                    echo "new srt ${newstr}"
-                    cpsrtcmd="cp -p \"${srtfile}\" \"${newstr}\""
-                    eval ${cpsrtcmd}
-                    echo "ready to copy : ${cpsrtcmd}"
-                    eval ${cpsrtcmd}
-                done
+                #Will use original file so no need to copy other info
+                # find "work_${mypid}/" -maxdepth 2 -mindepth 1 -type f -name "${fileout}*" -and \( -name "*.srt" -or -name "*.nfo" -or -name "*.jpg" -or -name "*.smi" -or -name "*.idx" -or -name "*.sub" \) -and -not \( -name "*.AC3.nvidia264.*" -or -name "*.AC3.nvidia265.*" \) -print0 | while read -d $'\0' srtfile
+                #do
+                #    echo "original ${srtfile} need ${fileout} with AC3 and ${tagenc}"
+                #    newstr=`echo "${srtfile}" | sed "s/${fileout}/${fileout}.AC3.${tagenc}/"`
+                #    echo "new srt ${newstr}"
+                #    cpsrtcmd="cp -p \"${srtfile}\" \"${newstr}\""
+                #    eval ${cpsrtcmd}
+                #    echo "ready to copy : ${cpsrtcmd}"
+                #    eval ${cpsrtcmd}
+                #done
                 mvcmd=`echo "mv \"${input}\" \"${input}_converted_${tagenc}\""`
                 echo "'${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
                 now=$(date)
@@ -677,6 +678,9 @@ then
                 probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
                 eval ${probe_command}
                 echo "###################TAGS###################"
+                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"${input}\"`
+                echo "Moving converted back to original work_${mypid}/${fileout}.AC3.${tagenc}.mkv to ${input} "
+                eval ${mvcmd}
             else
                 echo "Error ffmpeg result ${cresult}"
                 # v0.33 stop .skip for dir even for non-serie
