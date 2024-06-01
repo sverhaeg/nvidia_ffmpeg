@@ -678,7 +678,7 @@ then
                 probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
                 eval ${probe_command}
                 echo "###################TAGS###################"
-                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"${input}\"`
+                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"${input}\""`
                 echo "Moving converted back to original work_${mypid}/${fileout}.AC3.${tagenc}.mkv to ${input} "
                 eval ${mvcmd}
             else
