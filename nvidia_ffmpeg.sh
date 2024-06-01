@@ -678,8 +678,8 @@ then
                 probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
                 eval ${probe_command}
                 echo "###################TAGS###################"
-                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv"`
-                echo "Moving converted back to original work_${mypid}/${fileout}.AC3.${tagenc}.mkv to \"work_${mypid}/${fileout}.mkv "
+                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv\""`
+                echo "Moving converted back to original work_${mypid}/${fileout}.AC3.${tagenc}.mkv to work_${mypid}/${fileout}.mkv "
                 eval ${mvcmd}
             else
                 echo "Error ffmpeg result ${cresult}"
