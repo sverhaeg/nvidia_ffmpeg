@@ -674,14 +674,15 @@ then
                 echo " ####### Audio selected ${map_options_audio} #######"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
+                sleep 5 # avoiding permission denied
+                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv\""`
+                echo "Moving converted back to original filename with ext mkv "
+                echo "will do : ${mvcmd}"
+                eval ${mvcmd}
                 echo "###################TAGS###################"
-                probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\""`
+                probe_command=`echo "ffprobe -v quiet -show_format \"work_${mypid}/${fileout}.mkv\""`
                 eval ${probe_command}
                 echo "###################TAGS###################"
-                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv\""`
-                sleep 5
-                echo "Moving converted back to original work_${mypid}/${fileout}.AC3.${tagenc}.mkv to work_${mypid}/${fileout}.mkv "
-                eval ${mvcmd}
             else
                 echo "Error ffmpeg result ${cresult}"
                 # v0.33 stop .skip for dir even for non-serie
