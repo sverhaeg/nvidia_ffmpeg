@@ -674,8 +674,7 @@ then
                 echo " ####### Audio selected ${map_options_audio} #######"
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
-                sleep 5 # avoiding permission denied
-                mvcmd=`echo "\"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv\""`
+                mvcmd=`echo "mv \"work_${mypid}/${fileout}.AC3.${tagenc}.mkv\" \"work_${mypid}/${fileout}.mkv\""`
                 echo "Moving converted back to original filename with ext mkv "
                 echo "will do : ${mvcmd}"
                 eval ${mvcmd}
