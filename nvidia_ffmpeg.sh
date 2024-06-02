@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.33
+#@(#) version 0.34
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -30,6 +30,7 @@
 #@(#)   v0.32 25dec2023 : Added deinterlacing [-vf yadif] option to convert old DVDs and increased cq to 36 again
 #@(#)   v0.32 02mar2024 : correct converted filename
 #@(#)   v0.33 28apr2024 : stop putting .skipffmpegconvert in directory when failure
+#@(#)   v0.34 02jun2024 : Rename output back to orginal basename in mkv container no need tp copy other files like srt
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -667,7 +668,7 @@ then
                 mvcmd=`echo "mv \"${input}\" \"${input}_converted_${tagenc}\""`
                 echo "'${inputdir}/${fileoutfull}_converted_${tagenc}'" >> conversion_completed
                 now=$(date)
-                echo "on ${now} completed ${fileout} : ${tagenc}'" >> "work_${mypid}/.ffmpegconvert_done"
+                echo "on ${now} completed ${fileout} : ${tagenc}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio was ${audio_lines}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " Audio selected ${map_options_audio}" >> "work_${mypid}/.ffmpegconvert_done"
                 echo " ####### Audio was ${audio_lines} #######"
