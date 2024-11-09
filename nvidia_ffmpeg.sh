@@ -208,8 +208,11 @@ fi
 if [[ -z ${optopta} ]]
 then
     audio_subs_options="-c:s copy -c:a ac3 -b:a 640k" ## copy subs and covert audio to ac3 with 640k which is higest supported the default is 480k
+    audio_subs_options_nosub="-c:a ac3 -b:a 640k" ##  covert audio to ac3 with 640k which is higest supported the default is 480k
+
 else
     audio_subs_options=${optopta}
+    audio_subs_options_nosub=${audio_subs_options}
 fi
 
 if [[ -z ${prog_options} ]]
@@ -308,11 +311,16 @@ then
             #fileout=`echo ${input} | sed 's/^work_.*\/\(.*\)/\1/'`
             fileoutfull=`echo ${input} | sed 's/^work_.*\///'`
             fileout=`echo ${fileoutfull} | sed 's/\(.m2ts\|.mkv\|.mp4\|.m4v\|.avi\)$//'`
+            fileext=`echo ${fileoutfull} | sed 's/.*\.//'`
             if [[ $fileout == "" ]]
             then
                 echo " something went wrong, check work link "
                 rm "work_${mypid}/.runningffmpegconvert"
                 exit 252
+            fi
+            if [[ ${fileext} != "mkv" ]]
+            then
+              audio_subs_options=audio_subs_options_nosub
             fi
             if [[ -f work_${mypid}/${fileoutfull}.skipffmpegconvert ]] && [[ -z ${Force} ]]
                         then
