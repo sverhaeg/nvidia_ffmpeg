@@ -320,7 +320,7 @@ then
                                 #next file
                                 continue
                         fi
-            mkvtitle=`ffprobe  -show_entries format "${input}"  2>&1 | grep -i "TAG:title=" | sed s/TAG:title=// | sed s/TAG:TITLE=//`
+            mkvtitle=`ffprobe  -show_entries format "${input}"  2>&1 | grep -i "TAG:title=" | sed -i s/TAG:title=//`
             mkv_lines=`ffmpeg -nostdin -analyzeduration 100M -probesize 100M -i "${input}" 2>&1 | grep -v X11`
             video_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Video`
             audio_lines=`echo "${mkv_lines}" | grep -e Stream | grep -e Audio`
