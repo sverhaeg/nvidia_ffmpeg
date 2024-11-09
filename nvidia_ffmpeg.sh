@@ -320,7 +320,7 @@ then
             fi
             if [[ ${fileext} != "mkv" ]]
             then
-              audio_subs_options=audio_subs_options_nosub
+              audio_subs_options=${audio_subs_options_nosub}
             fi
             if [[ -f work_${mypid}/${fileoutfull}.skipffmpegconvert ]] && [[ -z ${Force} ]]
                         then
