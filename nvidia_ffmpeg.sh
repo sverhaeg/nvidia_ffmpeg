@@ -416,7 +416,7 @@ then
                             ;;
                     esac
                     # Try to not take commentary
-                    echo 'ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact "${input}" -v 0 '
+                    echo "ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact ${input} -v 0 "
                     nametagcheck=`ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact "${input}" -v 0 | grep -i Commentary | wc -l`
                     if [[ ${nametagcheck} == "0" ]]
                     then
