@@ -369,7 +369,7 @@ then
                     echo "${audiostream} : ${line}"
                     part1=`echo "${line}" | cut -f1 -d','`
                     astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
-                    aindex=`echo "${part1}" | cut -f2 -d':'`
+                    aindex=`echo "${astream}" | cut -f2 -d':'`
                     alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                     acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                     part3=`echo "${line}" | cut -f3 -d','`
