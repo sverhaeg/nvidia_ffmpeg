@@ -369,6 +369,7 @@ then
                     echo "${audiostream} : ${line}"
                     part1=`echo "${line}" | cut -f1 -d','`
                     astream=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#\([0-9]*\):\([0-9]*\).*/\1:\2/"`
+                    aindex=`echo "${part1}" | cut -f2 -d':'`
                     alan=`echo "${part1}" | sed "s/.*Stream[[:space:]]\#[0-9]*:[0-9]*(\(...\)).*/\1/"`
                     acod=`echo "${part1}" | sed "s/.*Audio:[[:space:]]\(...\).*/\1/"`
                     part3=`echo "${line}" | cut -f3 -d','`
@@ -414,9 +415,19 @@ then
                                 audioscore=$(( ${audioscore} + 5 ))
                             ;;
                     esac
+                    # Try to not take commentary
+                    nametagcheck=`ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact "${input}" -v 0 | grep -i Commentary | wc -l`
+                    if [[ ${nametagcheck} == "0" ]]
+                    then
+                        echo "DEBUG audio count normal as of 100"
+                        audioscore=$(( ${audioscore} + 100 ))
+                    else
+                        echo "${audiostream} is Commentary"
+                     fi
                     bestaudioscore[${audiostream}]=${audioscore}
                     bestaudiosstream[${audiostream}]=${astream}
                     echo "${audiostream} : ${astream} ${alan} ${acod} ${achan} score ${audioscore}"
+                    read -p "next" -n 1 -r REPLY
                 done
                 ## look for best score
                 abestscore=$(( 0 + 0 ))
