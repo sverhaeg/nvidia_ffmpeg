@@ -1,6 +1,6 @@
 #!/bin/bash
 #@(#)---------------------------------------------
-#@(#) version 0.34
+#@(#) version 0.35
 #@(#)   History
 #@(#)   v0.07	07jan2021 : first version with revision info
 #@(#)   v0.08	08jan2021 : skip for individual file added, leaving overall skip but if deleted still skip actual file
@@ -31,6 +31,7 @@
 #@(#)   v0.32 02mar2024 : correct converted filename
 #@(#)   v0.33 28apr2024 : stop putting .skipffmpegconvert in directory when failure
 #@(#)   v0.34 02jun2024 : Rename output back to orginal basename in mkv container no need tp copy other files like srt
+#@(#)   v0.35 10nov2024 : Detect Commentary in stream=codec_type:stream_tags=handler_name
 # ##################################################################################################################################
 # if using snap ffmpeg you need to make sure files are in media or home
 # also by default removable-media is not connected to snap
@@ -416,11 +417,10 @@ then
                             ;;
                     esac
                     # Try to not take commentary
-                    echo "ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact ${input} -v 0 "
                     nametagcheck=`ffprobe -select_streams ${aindex} -show_entries stream=codec_type:stream_tags=handler_name -of compact "${input}" -v 0 | grep -i Commentary | wc -l`
                     if [[ ${nametagcheck} == "0" ]]
                     then
-                        echo "DEBUG audio count normal as of 100"
+                        #echo "DEBUG audio count normal as of 100"
                         audioscore=$(( ${audioscore} + 100 ))
                     else
                         echo "${audiostream} is Commentary"
@@ -428,7 +428,6 @@ then
                     bestaudioscore[${audiostream}]=${audioscore}
                     bestaudiosstream[${audiostream}]=${astream}
                     echo "${audiostream} : ${astream} ${alan} ${acod} ${achan} score ${audioscore}"
-                    read -p "next" -n 1 -r REPLY
                 done
                 ## look for best score
                 abestscore=$(( 0 + 0 ))
