@@ -6,6 +6,7 @@ The script uses jellyfin-ffmpeg5 on top of the default ffmpeg
 ## You can use the full jellyfin but you can add the repo and only install jellyfin-ffmpeg5
 ##sudo wget -O- https://repo.jellyfin.org/install-debuntu.sh | sudo bash
 ## manual
+<code>
 sudo apt install curl gnupg
 sudo mkdir /etc/apt/keyrings
 DISTRO="$( awk -F'=' '/^ID=/{ print $NF }' /etc/os-release )"
@@ -19,6 +20,7 @@ Components: main
 Architectures: $( dpkg --print-architecture )
 Signed-By: /etc/apt/keyrings/jellyfin.gpg
 EOF
+<\code>
 ###########
 sudo apt update
 ## install only
